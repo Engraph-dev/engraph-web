@@ -1,0 +1,6 @@
+[submodule "prisma"]
+	path = prisma
+	url = https://github.com/Engraph-dev/shared-schema
+[submodule "src/lib/defs"]
+	path = src/lib/defs
+	url = https://github.com/Engraph-dev/shared-typedefs
