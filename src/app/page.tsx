@@ -3,7 +3,7 @@ import { Pricing } from "@/components/pages/landing/client";
 
 export default function Home() {
   return (
-    <main className="relative overflow-hidden min-h-screen">
+    <div className="relative overflow-clip min-h-screen">
       <div
         className="w-full h-svh absolute top-0 right-0 -z-10 translate-x-1/2 -translate-y-1/4 pointer-events-none bg-transparent"
         style={{
@@ -15,6 +15,6 @@ export default function Home() {
       <Features />
       <Steps />
       <Pricing />
-    </main>
+    </div>
   );
 }

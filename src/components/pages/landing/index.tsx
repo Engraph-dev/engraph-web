@@ -83,22 +83,24 @@ function FeatureCard(
 }
 export function Features() {
   return (
-    <section className="px-6 md:px-12 flex gap-12 py-4">
-      <div className="flex flex-col gap-6 w-1/3">
+    <section className="px-6 md:px-12 ~flex grid grid-cols-[1fr_2.5fr] gap-12 py-4 relative">
+      <div className="flex flex-col gap-6 sticky top-12 h-fit">
         <h2 className="text-4xl font-bold">Features</h2>
         <p className="text-xl">
           Explore the features that make our AI-powered README generator the
           perfect solution for creating clear, professional documentation:
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-4 w-full relative">
+      <div className="grid w-full *:[grid-area:1/-1]">
         <div
-          className="w-full h-svh absolute top-1/3 left-0 -z-10 ~translate-x-1/2 -translate-y-1/4 pointer-events-none bg-transparent"
+          className="w-full h-svh sticky -z-10 top-0 pointer-events-none bg-transparent"
           style={{
             backgroundImage: "radial-gradient(#1D0199 , rgba(48,1,255,0) 70%)",
           }}
         />
-        {featureCardData.map(FeatureCard)}
+        <div className="grid grid-cols-2 gap-4 w-full">
+          {featureCardData.map(FeatureCard)}
+        </div>
       </div>
     </section>
   );
@@ -129,8 +131,8 @@ export function StepCard({ steps, title }: StepCardProps, index: number) {
 
 export function Steps() {
   return (
-    <section className="px-6 md:px-12 py-12 flex gap-12">
-      <div className="w-full">
+    <section className="px-6 md:px-12 py-12 flex gap-12 relative">
+      <div className="w-full sticky top-0 h-fit">
         <h2 className="text-4xl font-bold py-6">Steps</h2>
         <div className="px-8 py-12 flex flex-col gap-4 bg-c1/50 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 rounded-2xl ">
           {stepsData.map((item, idx) => (
@@ -140,14 +142,15 @@ export function Steps() {
           ))}
         </div>
       </div>
-      <div className="gap-6 flex flex-col relative">
+
+      <div className="grid w-full *:[grid-area:1/-1]">
         <div
-          className="w-full h-svh absolute top-1/3 left-0 -z-10 -translate-x-1/2 -translate-y-1/4 pointer-events-none bg-transparent"
+          className="w-full h-svh sticky top-1/3 right-0 -translate-x-1/2 -z-10 pointer-events-none bg-transparent"
           style={{
             backgroundImage: "radial-gradient(#1D0199 , rgba(48,1,255,0) 70%)",
           }}
         />
-        {stepsData.map(StepCard)}
+        <div className="gap-6 flex flex-col">{stepsData.map(StepCard)}</div>
       </div>
     </section>
   );
