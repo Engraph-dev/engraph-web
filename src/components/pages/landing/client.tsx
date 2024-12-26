@@ -92,7 +92,7 @@ function PricingPlanIdealCard({
       onClick={handleClick}
       role="button"
       className={cn(
-        "p-6 rounded-2xl grid grid-cols-[0.75fr_4fr_0.75fr] gap-1",
+        "p-6 rounded-2xl grid grid-cols-[0.75fr_4fr_0.75fr] gap-2",
         isSelected ? "bg-c2/40" : "bg-c1/50",
       )}
     >
@@ -120,7 +120,7 @@ function PricingPlanCard({
   handleClick: Dispatch<SetStateAction<number>>;
 }) {
   return (
-    <div className="gap-6 grid grid-cols-[1.5fr_2.5fr]">
+    <div className="gap-6 grid grid-cols-1 md:grid-cols-[1.5fr_2.5fr]">
       <div className="px-8 bg-c2/40 py-6 flex flex-col gap-4 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 rounded-2xl ">
         <h3 className="text-3xl font-semibold pb-6">Plan Features</h3>
         <div className="grid grid-cols-[0.75fr_3fr] gap-2">

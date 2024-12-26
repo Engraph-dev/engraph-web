@@ -83,8 +83,8 @@ function FeatureCard(
 }
 export function Features() {
   return (
-    <section className="px-6 md:px-12 ~flex grid grid-cols-[1fr_2.5fr] gap-12 py-4 relative">
-      <div className="flex flex-col gap-6 sticky top-12 h-fit">
+    <section className="px-6 md:px-12 ~flex grid grid-cols-1 md:grid-cols-[1fr_2.5fr] gap-12 py-4 relative">
+      <div className="flex flex-col gap-6 static md:sticky top-12 h-fit">
         <h2 className="text-4xl font-bold">Features</h2>
         <p className="text-xl">
           Explore the features that make our AI-powered README generator the
@@ -98,7 +98,7 @@ export function Features() {
             backgroundImage: "radial-gradient(#1D0199 , rgba(48,1,255,0) 70%)",
           }}
         />
-        <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {featureCardData.map(FeatureCard)}
         </div>
       </div>
@@ -131,8 +131,8 @@ export function StepCard({ steps, title }: StepCardProps, index: number) {
 
 export function Steps() {
   return (
-    <section className="px-6 md:px-12 py-12 flex gap-12 relative">
-      <div className="w-full sticky top-0 h-fit">
+    <section className="px-6 md:px-12 py-12 flex flex-col md:flex-row gap-12 relative">
+      <div className="w-full static md:sticky top-0 h-fit">
         <h2 className="text-4xl font-bold py-6">Steps</h2>
         <div className="px-8 py-12 flex flex-col gap-4 bg-c1/50 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 rounded-2xl ">
           {stepsData.map((item, idx) => (
