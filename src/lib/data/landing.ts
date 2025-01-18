@@ -2,9 +2,7 @@ export type TNavLink = {
 	title: string
 	href: string
 }
-	title: string
-	href: string
-}
+
 export const navLinks: TNavLink[] = [
 	{ title: "Home", href: "/" },
 	{ title: "Features", href: "/features" },
