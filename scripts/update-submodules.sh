@@ -6,7 +6,7 @@ git pull origin $PARENT_BRANCH
 git push origin $PARENT_BRANCH
 cd ..
 
-cd src/util/defs
+cd src/lib/defs
 git checkout -b $PARENT_BRANCH
 git pull origin $PARENT_BRANCH
 git push origin $PARENT_BRANCH
