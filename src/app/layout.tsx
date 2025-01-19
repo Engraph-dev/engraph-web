@@ -6,12 +6,12 @@ import { DM_Sans } from "next/font/google"
 
 const font = DM_Sans({
 	subsets: ["latin"],
-});
+})
 
 export const metadata: Metadata = {
 	title: "Engraph",
 	description: "Create documentation for your code.",
-};
+}
 
 export default function RootLayout({
 	children,
