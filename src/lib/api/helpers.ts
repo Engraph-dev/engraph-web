@@ -1,3 +1,5 @@
+"use server"
+
 import { localAuthSession } from "@/lib/config/api"
 import {
 	type ReqMethod as RequestMethod,
@@ -50,7 +52,7 @@ export async function makeAPIRequest<
 	args: MakeAPIRequestArgs<ParamsT, BodyT, QueryT>,
 	signal?: Signal,
 ): Promise<MakeAPIRequestRet<ResponseT, ParamsT, BodyT, QueryT>> {
-	const url = process.env.NEXT_PUBLIC_API_URL
+	const url = process.env.API_URL
 	const {
 		requestMethod,
 		requestUrl,

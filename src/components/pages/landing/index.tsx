@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
 	FeatureCardProps,
 	StepCardProps,
@@ -32,9 +32,15 @@ export function Navbar() {
 			<nav className="hidden rounded-full bg-c1/50 bg-opacity-10 bg-clip-padding backdrop-blur-sm backdrop-filter md:flex">
 				{navLinks.map(NavLink)}
 			</nav>
-			<Button variant="rounded" size="lg" className="py-4">
+			<Link
+				href="/user/login"
+				className={cn(
+					"py-4",
+					buttonVariants({ variant: "rounded", size: "lg" }),
+				)}
+			>
 				Login
-			</Button>
+			</Link>
 		</div>
 	)
 }

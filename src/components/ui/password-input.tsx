@@ -17,10 +17,10 @@ const PasswordInput = React.forwardRef<
 	return (
 		<div className="relative">
 			<Input
-				type={showPassword ? "text" : "password"}
 				className={cn("hide-password-toggle pr-10", className)}
 				ref={ref}
 				{...props}
+				type={showPassword ? "text" : "password"}
 			/>
 			<Button
 				type="button"
