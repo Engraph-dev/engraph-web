@@ -19,7 +19,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select"
-import { titleToRole } from "@/lib/constants/user"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
 import {
 	CreateUserBody,
@@ -140,9 +139,9 @@ export default function AddUserDialog() {
 							<SelectContent>
 								<SelectGroup>
 									<SelectLabel>Role</SelectLabel>
-									{Object.keys(titleToRole).map((key) => (
+									{Object.keys(UserRole).map((key) => key !== UserRole.Owner && (
 										<SelectItem key={key} value={key}>
-											{titleToRole[key as UserRole]}
+											{UserRole[key as UserRole]}
 										</SelectItem>
 									))}
 								</SelectGroup>

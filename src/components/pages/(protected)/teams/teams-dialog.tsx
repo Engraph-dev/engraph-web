@@ -20,7 +20,7 @@ import { toast } from "sonner"
 export default function AddTeamDialog() {
 	const [isOpen, setIsOpen] = useState(false)
 
-	const addUserForm = useRequestForm<
+	const addTeamForm = useRequestForm<
 		CreateTeamResponse,
 		NoParams,
 		CreateTeamBody,
@@ -50,7 +50,7 @@ export default function AddTeamDialog() {
 	const {
 		registerField,
 		generateSubmitHandler,
-	} = addUserForm
+	} = addTeamForm
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -66,7 +66,7 @@ export default function AddTeamDialog() {
 				<form onSubmit={generateSubmitHandler()} className="space-y-4">
 
 					<TextField
-						form={addUserForm}
+						form={addTeamForm}
 						label="Team Name"
 						inputProps={{
 							...registerField("teamName", "BODY"),

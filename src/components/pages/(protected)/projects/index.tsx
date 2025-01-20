@@ -6,10 +6,10 @@ import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
 import { GetProjectsResponse } from "@/lib/defs/engraph-backend/orgs/me/projects"
 import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
-import { Plus } from "lucide-react"
 import {
     useMemo,
 } from "react"
+import AddProjectDialog from "@/components/pages/(protected)/projects/projects-dialog"
 
 
 export default function ProjectsSection() {
@@ -28,9 +28,7 @@ export default function ProjectsSection() {
         <div>
             <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Projects</h2>
-                <Button>
-                    <Plus className="mr-2 h-4 w-4" /> Add Project
-                </Button>
+                <AddProjectDialog />
             </div>
             <InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {projectsList.map((project) => (

@@ -36,7 +36,7 @@ export default function SettingsPage() {
     })
     return (
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            <Button onClick={() => submitForm()} variant="outline" disabled={isVerified} className='flex justify-between items-center py-12 w-full'>
+            <Button onClick={() => submitForm({ urlParams: { orgId: sessionData?.orgId || "" } })} variant="outline" disabled={isVerified} className='flex justify-between items-center py-12 w-full'>
                 <VerifiedIcon size={64} />
                 <h2 className='text-xl font-semibold'>Verify Account</h2>
             </Button>

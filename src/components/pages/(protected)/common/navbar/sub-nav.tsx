@@ -9,13 +9,6 @@ const navItems = [
     { name: "Projects", href: "/projects" },
     { name: "Teams", href: "/teams" },
     { name: "Users", href: "/users" },
-    { name: "Domains", href: "/domains" },
-    { name: "Usage", href: "/usage" },
-    { name: "Monitoring", href: "/monitoring" },
-    { name: "Observability", href: "/observability" },
-    { name: "Storage", href: "/storage" },
-    { name: "AI", href: "/ai" },
-    { name: "Support", href: "/support" },
     { name: "Settings", href: "/settings" },
 ]
 

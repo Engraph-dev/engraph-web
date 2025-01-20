@@ -7,6 +7,7 @@ import { GetTeamsResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
 import { useMemo } from "react"
 import AddTeamDialog from "@/components/pages/(protected)/teams/teams-dialog"
+import Link from "next/link"
 
 
 export default function TeamsSection() {
@@ -30,14 +31,16 @@ export default function TeamsSection() {
             </div>
             <InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {teamList.map((team) => (
-                    <Card key={team.teamId}>
-                        <CardHeader>
-                            <CardTitle>{team.teamName}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p>Members: {team.userCount}</p>
-                        </CardContent>
-                    </Card>
+                    <Link href={`/teams/${team.teamId}}`} key={team.teamId}>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>{team.teamName}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p>Members: {team.userCount}</p>
+                            </CardContent>
+                        </Card>
+                    </Link>
                 ))}
                 {!teamList.length && !isLoading && (
                     <div className="col-span-full row-span-full flex justify-center items-center py-24">

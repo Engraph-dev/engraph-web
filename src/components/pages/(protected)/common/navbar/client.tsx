@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button, ButtonProps } from "@/components/ui/button"
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
 import {
     Popover,
     PopoverContent,
@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useSession } from "@/lib/hooks/useSession"
 import { cn } from "@/lib/utils"
 import { LogOut, Settings } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 export function UserDetails() {
@@ -66,13 +67,13 @@ export function Account(props: ButtonProps) {
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-64 space-y-2 p-2">
-                <Button
-                    variant="ghost"
-                    className="flex w-full items-center justify-between"
+                <Link
+                    href="/settings"
+                    className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between")}
                 >
                     Settings
                     <Settings />
-                </Button>
+                </Link>
                 <Button
                     onClick={handleLogout}
                     variant="destructive"
