@@ -8,7 +8,6 @@ import { useState } from "react"
 
 export default function HomePage() {
 	const [activeTab, setActiveTab] = useState("projects")
-
 	return (
 		<Tabs
 			value={activeTab}

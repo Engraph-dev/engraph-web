@@ -1,8 +1,9 @@
 import { makeAPIRequest } from "@/lib/api/helpers"
 import { localAuthSession } from "@/lib/config/api"
-// import type { SessionData } from "../context/session/context"
+import { PUBLIC_PATHS } from "@/lib/constants/user"
 import { type NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { GetSessionResponse } from "@/lib/defs/engraph-backend/orgs/me/sessions/me"
+import { usePathname, useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 
 export type UseSessionRet = {
@@ -11,12 +12,14 @@ export type UseSessionRet = {
 	closeSession: () => void
 }
 
-export function useSession(): UseSessionRet {
+export function useSession(strict: boolean = false): UseSessionRet {
 	const [sessionData, setSessionData] = useState<
 		GetSessionResponse["sessionData"] | null
 	>(null)
+	const router = useRouter()
+	const pathname = usePathname()
 
-	const getSession = async () => {
+	const getSession = useCallback(async () => {
 		const sessionRes = await makeAPIRequest<
 			GetSessionResponse,
 			NoParams,
@@ -29,18 +32,29 @@ export function useSession(): UseSessionRet {
 			bodyParams: {},
 			queryParams: {},
 		})
-		console.log({ sessionRes })
 		if (
 			sessionRes.hasResponse &&
 			sessionRes.responseData.responseStatus === "SUCCESS"
 		) {
 			setSessionData(sessionRes.responseData.sessionData)
+			if (strict && PUBLIC_PATHS.includes(pathname)) {
+				router.replace("/home")
+			}
 		}
-	}
+		if (
+			strict &&
+			(sessionRes.statusCode === 401 ||
+				(sessionRes.hasResponse &&
+					sessionRes.responseData.responseStatus ===
+						"ERR_UNAUTHENTICATED"))
+		) {
+			router.replace("/user/login")
+		}
+	}, [pathname, router, strict])
 
 	const refreshSession = useCallback(() => {
 		getSession()
-	}, [])
+	}, [getSession])
 
 	const closeCurrentSession = async () => {
 		try {

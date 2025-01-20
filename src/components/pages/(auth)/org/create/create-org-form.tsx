@@ -34,7 +34,6 @@ export default function CreateOrgForm() {
 		},
 		responseHandlers: {
 			onSuccess: (resp) => {
-				console.log({ resp })
 				toast.success(
 					"Organization created successfully with OrgId: " +
 						resp.orgData.orgId,

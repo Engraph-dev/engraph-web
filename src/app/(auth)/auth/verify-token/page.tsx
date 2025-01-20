@@ -13,7 +13,6 @@ export default async function Page({
 	searchParams: Promise<{ id: string; token: string; orgId: string }>
 }) {
 	const params = await searchParams
-	console.log({ params })
 	if (!params.id || !params.token || !params.orgId) {
 		return (
 			<div className="container mx-auto flex items-center justify-center">

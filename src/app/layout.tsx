@@ -1,4 +1,4 @@
-import "./globals.css"
+import "@/app/globals.css"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/wrappers/theme-provider"
 import type { Metadata } from "next"

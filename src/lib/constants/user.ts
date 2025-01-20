@@ -6,3 +6,5 @@ export const titleToRole: Record<UserRole, string> = {
 	Owner: "Owner",
 	Viewer: "Viewer",
 }
+
+export const PUBLIC_PATHS = ["/", "/user/login", "/org/create"]

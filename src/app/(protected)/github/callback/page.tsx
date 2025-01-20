@@ -33,8 +33,6 @@ export default async function GithubCallback(props: GithubCallbackPageProps) {
 		process.env.NEXT_PUBLIC_ORIGIN + "/github/callback",
 	)
 
-	console.log(targetUrl.toString())
-
 	const fetchResp = await fetch(targetUrl.toString(), {
 		method: "POST",
 		headers: {

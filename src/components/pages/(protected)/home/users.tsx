@@ -1,58 +1,43 @@
 "use client"
 
-import AddUserDialog from "./users-dialog"
-import { Button } from "@/components/ui/button"
+import AddUserDialog from "@/components/pages/(protected)/home/users-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
+import { NoParams } from "@/lib/defs/engraph-backend/common"
+import { GetUsersResponse } from "@/lib/defs/engraph-backend/orgs/me/users"
+import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
 import { User } from "@prisma/client"
-import { Plus } from "lucide-react"
-import {
-	// useMemo,
-	useState,
-} from "react"
-
-// import { useAPIRequest } from "@/lib/hooks/useAPI"
-// import { NoParams } from "@/lib/defs/engraph-backend/common"
-// import { GetUsersQuery, GetUsersResponse } from "@/lib/defs/engraph-backend/orgs/me/users"
-// import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
-
-const mockUsers: Partial<User>[] = [
-	{
-		userId: "1",
-		userFirstName: "John",
-		userLastName: "Doe",
-		userMail: "john@example.com",
-		userRole: "Developer",
-	},
-	{
-		userId: "2",
-		userFirstName: "Jane",
-		userLastName: "Smith",
-		userMail: "jane@example.com",
-		userRole: "Admin",
-	},
-]
+import { useMemo } from "react"
 
 export default function UsersSection() {
-	const [users, setUsers] = useState<Partial<User>[]>(mockUsers)
-	// const { data, fetchNextPage } = usePaginatedAPI<GetUsersResponse, NoParams, NoParams, NoParams>({
-	//     requestUrl: "/orgs/me/users",
-	//     requestMethod: "GET",
-	//     queryParams: {},
-	//     urlParams: {},
-	//     bodyParams: {}
-	// })
-	// const userList = useMemo(() => data.reduce((acc, page) => [...acc, ...page.orgUsers], [] as Partial<User>[]), [data])
+	const { data, InfiniteScrollWithDebouncing } = usePaginatedAPI<
+		GetUsersResponse,
+		NoParams,
+		NoParams,
+		NoParams
+	>({
+		requestUrl: "/orgs/me/users",
+		requestMethod: "GET",
+		queryParams: {},
+		urlParams: {},
+		bodyParams: {},
+		hasNextPage: (res) => {
+			if (!res) return true
+			return res.orgUsers.length === DEFAULT_PAGE_SIZE
+		},
+	})
 
-	const addUser = () => {
-		const newUser: Partial<User> = {
-			userId: `${users.length + 1}`,
-			userFirstName: "New",
-			userLastName: "User",
-			userMail: `newuser${users.length + 1}@example.com`,
-			userRole: "Viewer",
-		}
-		setUsers([...users, newUser])
-	}
+	const userList = useMemo(
+		() =>
+			data.reduce(
+				(acc, page) => [
+					...acc,
+					...page.orgUsers.filter((elem) => !acc.includes(elem)),
+				],
+				[] as Partial<User>[],
+			),
+		[data],
+	)
 
 	return (
 		<div>
@@ -60,8 +45,8 @@ export default function UsersSection() {
 				<h2 className="text-2xl font-bold">Users</h2>
 				<AddUserDialog />
 			</div>
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{users.map((user) => (
+			<InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				{userList.map((user) => (
 					<Card key={user.userId}>
 						<CardHeader>
 							<CardTitle>{`${user.userFirstName} ${user.userLastName}`}</CardTitle>
@@ -72,7 +57,7 @@ export default function UsersSection() {
 						</CardContent>
 					</Card>
 				))}
-			</div>
+			</InfiniteScrollWithDebouncing>
 		</div>
 	)
 }
