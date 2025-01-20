@@ -20,7 +20,7 @@ export type MakeAPIRequestArgs<
 	customHeaders?: Headers
 }
 
-type MakeAPIRequestRet<
+export type MakeAPIRequestRet<
 	ResponseT extends {} = {},
 	ParamsT extends {} = {},
 	BodyT extends {} = {},
@@ -58,7 +58,7 @@ export async function makeAPIRequest<
 		urlParams,
 		queryParams,
 		bodyParams,
-		customHeaders = {},
+		customHeaders = new Headers(),
 	} = args
 
 	let resolvedUrl = requestUrl
@@ -135,8 +135,13 @@ export async function makeAPIRequest<
 			}
 		}
 
-		const responseJson = await fetchResponse.json() as ResponseJSON<ResponseT, ParamsT, BodyT, QueryT>
-		
+		const responseJson = (await fetchResponse.json()) as ResponseJSON<
+			ResponseT,
+			ParamsT,
+			BodyT,
+			QueryT
+		>
+
 		return {
 			hasResponse: true,
 			hasError: false,

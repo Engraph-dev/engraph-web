@@ -1,8 +1,7 @@
 "use client"
 
-import { makeAPIRequest } from "@/lib/api/helpers"
+import { type MakeAPIRequestArgs, makeAPIRequest } from "@/lib/api/helpers"
 import type {
-	ReqMethod as RequestMethod,
 	ResJSON as ResponseJSON,
 	StatusCode,
 } from "@/lib/defs/engraph-backend/common"
@@ -12,13 +11,7 @@ export type UseAPIRequestArgs<
 	ParamsT extends {} = {},
 	BodyT extends {} = {},
 	QueryT extends {} = {},
-> = {
-	requestUrl: string
-	requestMethod: RequestMethod
-	urlParams: ParamsT
-	bodyParams: BodyT
-	queryParams: QueryT
-	customHeaders?: Headers
+> = MakeAPIRequestArgs<ParamsT, BodyT, QueryT> & {
 	customDeps?: any[]
 	overrideDeps?: true
 }
@@ -68,7 +61,7 @@ export function useAPIRequest<
 		urlParams,
 		queryParams,
 		bodyParams,
-		customHeaders = {},
+		customHeaders = new Headers(),
 		customDeps = [],
 	} = args
 
