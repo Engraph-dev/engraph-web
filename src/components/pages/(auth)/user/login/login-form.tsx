@@ -9,10 +9,12 @@ import {
 } from "@/lib/defs/engraph-backend/orgs/[orgId]/auth"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import React from "react"
 import { toast } from "sonner"
 
 export default function LoginForm({ orgId }: { orgId: string }) {
+	const router = useRouter()
 	const loginCredentialsForm = useRequestForm<
 		ResJSON,
 		LoginCredentialsParams,
@@ -34,6 +36,7 @@ export default function LoginForm({ orgId }: { orgId: string }) {
 		responseHandlers: {
 			onSuccess: () => {
 				toast.success("Login successful")
+				router.replace("/home")
 			},
 			onUnauthorized: (stat) => {
 				toast.error(stat)
@@ -79,7 +82,9 @@ export default function LoginForm({ orgId }: { orgId: string }) {
 			<p>
 				Don&apos;t have an organization?{" "}
 				<span className="underline transition-all hover:text-blue-600 hover:decoration-blue-600">
-					<Link href="/org/create">Create Now!</Link>
+					<Link replace href="/org/create">
+						Create Now!
+					</Link>
 				</span>
 			</p>
 			<div className="flex items-center justify-between">

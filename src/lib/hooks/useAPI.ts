@@ -8,7 +8,7 @@ import type {
 } from "@/lib/defs/engraph-backend/common"
 import { useEffect, useState } from "react"
 
-type UseAPIRequestArgs<
+export type UseAPIRequestArgs<
 	ParamsT extends {} = {},
 	BodyT extends {} = {},
 	QueryT extends {} = {},
@@ -23,7 +23,7 @@ type UseAPIRequestArgs<
 	overrideDeps?: true
 }
 
-type UseAPIRequestRet<
+export type UseAPIRequestRet<
 	ResponseT extends {} = {},
 	ParamsT extends {} = {},
 	BodyT extends {} = {},

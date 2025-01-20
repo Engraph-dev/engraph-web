@@ -59,12 +59,15 @@ export function Hero() {
 				features, structure, and screenshots in seconds. Focus on coding
 				while we handle the rest.
 			</p>
-			<Button
-				variant="rounded_inverted"
-				className="px-8 py-10 text-xl font-semibold shadow-[0_4px_4px_hsl(var(--c1))] md:px-48 md:text-2xl"
+			<Link
+				href="/org/create"
+				className={cn(
+					buttonVariants({ variant: "rounded_inverted" }),
+					"px-8 py-10 text-xl font-semibold shadow-[0_4px_4px_hsl(var(--c1))] md:px-48 md:text-2xl",
+				)}
 			>
-				Enter GitHub Link to get Started
-			</Button>
+				Get Started
+			</Link>
 		</section>
 	)
 }

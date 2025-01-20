@@ -108,7 +108,9 @@ export default function CreateOrgForm() {
 			<p>
 				Already have an organization?{" "}
 				<span className="underline transition-all hover:text-blue-600 hover:decoration-blue-600">
-					<Link href="/user/login">Login Now!</Link>
+					<Link replace href="/user/login">
+						Login Now!
+					</Link>
 				</span>
 			</p>
 			<div className="flex items-center justify-between">
