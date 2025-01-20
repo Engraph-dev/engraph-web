@@ -1,8 +1,6 @@
-import TeamsSection from '@/components/pages/(protected)/teams'
-import React from 'react'
+import TeamsSection from "@/components/pages/(protected)/teams"
+import React from "react"
 
 export default function Page() {
-    return (
-        <TeamsSection />
-    )
+	return <TeamsSection />
 }

@@ -1,9 +1,11 @@
-import TeamViewPage from '@/components/pages/(protected)/teams/[id]'
-import React from 'react'
+import TeamViewPage from "@/components/pages/(protected)/teams/[id]"
+import React from "react"
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
-    return (
-        <TeamViewPage id={String(id)} />
-    )
+export default async function Page({
+	params,
+}: {
+	params: Promise<{ id: string }>
+}) {
+	const { id } = await params
+	return <TeamViewPage id={String(id)} />
 }

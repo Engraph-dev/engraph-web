@@ -30,7 +30,25 @@ export function usePreparedAPIRequest<
 		lockParams = false,
 	} = args
 
-	const preparedRequest = useCallback(
+	const preparedRequest = useCallback(() => {
+		return makeAPIRequest<ResponseT, ParamsT, BodyT, QueryT>({
+			bodyParams,
+			queryParams,
+			requestMethod,
+			requestUrl,
+			urlParams,
+			customHeaders,
+		})
+	}, [
+		bodyParams,
+		customHeaders,
+		queryParams,
+		requestMethod,
+		requestUrl,
+		urlParams,
+	])
+
+	const lockedPreparedRequest = useCallback(
 		() => {
 			return makeAPIRequest<ResponseT, ParamsT, BodyT, QueryT>({
 				bodyParams,
@@ -41,17 +59,9 @@ export function usePreparedAPIRequest<
 				customHeaders,
 			})
 		},
-		lockParams
-			? []
-			: [
-					requestUrl,
-					requestMethod,
-					...Object.values(urlParams),
-					...Object.values(bodyParams),
-					...Object.values(queryParams),
-					...Object.values(customHeaders),
-				],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[],
 	)
 
-	return preparedRequest
+	return lockParams ? lockedPreparedRequest : preparedRequest
 }

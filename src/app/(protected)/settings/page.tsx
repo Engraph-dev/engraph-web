@@ -1,8 +1,6 @@
-import SettingsPage from '@/components/pages/(protected)/settings'
-import React from 'react'
+import SettingsPage from "@/components/pages/(protected)/settings"
+import React from "react"
 
 export default function Page() {
-    return (
-        <SettingsPage />
-    )
+	return <SettingsPage />
 }

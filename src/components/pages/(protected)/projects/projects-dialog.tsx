@@ -10,10 +10,17 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { CreateProjectBody } from "@/lib/defs/engraph-backend/orgs/me/projects"
-
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { ProjectSourceType, ProjectType } from "@prisma/client"
 import { Plus } from "lucide-react"
@@ -38,7 +45,7 @@ export default function AddProjectDialog() {
 				projectIdentifier: "",
 				projectName: "",
 				projectSourceType: ProjectSourceType.GitHub,
-				projectType: ProjectType.typescript
+				projectType: ProjectType.typescript,
 			},
 			queryParams: {},
 			urlParams: {},
@@ -52,14 +59,16 @@ export default function AddProjectDialog() {
 			},
 			onInvalidParams: (data) => {
 				toast.info(JSON.stringify(data))
-			}
-		}
+			},
+		},
 	})
 	const {
 		registerField,
 		generateSubmitHandler,
 		setFields,
-		formValues: { bodyParams: { projectSourceType, projectType } }
+		formValues: {
+			bodyParams: { projectSourceType, projectType },
+		},
 	} = addProjectForm
 
 	return (
@@ -83,13 +92,18 @@ export default function AddProjectDialog() {
 						}}
 					/>
 					<div className="space-y-1">
-						<Label htmlFor="projectSourceType">Project Source</Label>
+						<Label htmlFor="projectSourceType">
+							Project Source
+						</Label>
 						<Select
 							name="projectSourceType"
 							value={projectSourceType}
 							onValueChange={(val) =>
 								setFields({
-									bodyParams: { projectSourceType: val as ProjectSourceType },
+									bodyParams: {
+										projectSourceType:
+											val as ProjectSourceType,
+									},
 								})
 							}
 						>
@@ -99,11 +113,17 @@ export default function AddProjectDialog() {
 							<SelectContent>
 								<SelectGroup>
 									<SelectLabel>Sources</SelectLabel>
-									{Object.keys(ProjectSourceType).map((key) => (
-										<SelectItem key={key} value={key}>
-											{ProjectSourceType[key as ProjectSourceType]}
-										</SelectItem>
-									))}
+									{Object.keys(ProjectSourceType).map(
+										(key) => (
+											<SelectItem key={key} value={key}>
+												{
+													ProjectSourceType[
+														key as ProjectSourceType
+													]
+												}
+											</SelectItem>
+										),
+									)}
 								</SelectGroup>
 							</SelectContent>
 						</Select>
@@ -115,7 +135,9 @@ export default function AddProjectDialog() {
 							value={projectType}
 							onValueChange={(val) =>
 								setFields({
-									bodyParams: { projectType: val as ProjectType },
+									bodyParams: {
+										projectType: val as ProjectType,
+									},
 								})
 							}
 						>
@@ -134,9 +156,7 @@ export default function AddProjectDialog() {
 							</SelectContent>
 						</Select>
 					</div>
-					<Button className="w-full">
-						Get Project Identifier
-					</Button>
+					<Button className="w-full">Get Project Identifier</Button>
 					<div className="flex items-center justify-between">
 						<Button variant="destructive" type="reset">
 							Clear

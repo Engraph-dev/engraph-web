@@ -10,8 +10,10 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
-import { CreateTeamBody, CreateTeamResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
-
+import {
+	CreateTeamBody,
+	CreateTeamResponse,
+} from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { Plus } from "lucide-react"
 import { useState } from "react"
@@ -30,7 +32,7 @@ export default function AddTeamDialog() {
 		requestUrl: "/orgs/me/teams",
 		formFields: {
 			bodyParams: {
-				teamName: ""
+				teamName: "",
 			},
 			queryParams: {},
 			urlParams: {},
@@ -44,13 +46,10 @@ export default function AddTeamDialog() {
 			},
 			onInvalidParams: (data) => {
 				toast.info(JSON.stringify(data))
-			}
-		}
+			},
+		},
 	})
-	const {
-		registerField,
-		generateSubmitHandler,
-	} = addTeamForm
+	const { registerField, generateSubmitHandler } = addTeamForm
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -64,7 +63,6 @@ export default function AddTeamDialog() {
 					<DialogTitle>Add Team</DialogTitle>
 				</DialogHeader>
 				<form onSubmit={generateSubmitHandler()} className="space-y-4">
-
 					<TextField
 						form={addTeamForm}
 						label="Team Name"

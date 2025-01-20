@@ -61,8 +61,8 @@ export default function AddUserDialog() {
 			},
 			onInvalidParams: (data) => {
 				toast.info(JSON.stringify(data))
-			}
-		}
+			},
+		},
 	})
 	const {
 		registerField,
@@ -139,11 +139,17 @@ export default function AddUserDialog() {
 							<SelectContent>
 								<SelectGroup>
 									<SelectLabel>Role</SelectLabel>
-									{Object.keys(UserRole).map((key) => key !== UserRole.Owner && (
-										<SelectItem key={key} value={key}>
-											{UserRole[key as UserRole]}
-										</SelectItem>
-									))}
+									{Object.keys(UserRole).map(
+										(key) =>
+											key !== UserRole.Owner && (
+												<SelectItem
+													key={key}
+													value={key}
+												>
+													{UserRole[key as UserRole]}
+												</SelectItem>
+											),
+									)}
 								</SelectGroup>
 							</SelectContent>
 						</Select>
