@@ -1,4 +1,4 @@
-import CardSkeleton from "@/components/pages/(protected)/home/card-skeleton"
+import CardSkeleton from "@/components/skeletons/card-skeleton"
 import {
 	DEFAULT_PAGE_SIZE,
 	DEFAULT_SEARCH_PAGE,

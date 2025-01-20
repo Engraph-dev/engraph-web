@@ -1,5 +1,5 @@
 // "use server"
-import { localAuthSession } from "@/lib/config/api"
+import { AUTH_SESSION, LOCAL_AUTH_SESSION } from "@/lib/config/api"
 import {
 	type ReqMethod as RequestMethod,
 	type ResJSON as ResponseJSON,
@@ -81,7 +81,7 @@ export async function makeAPIRequest<
 	let sessionToken = null
 	const isWindow = typeof window !== "undefined"
 	if (isWindow) {
-		// sessionToken = sessionStorage.getItem(localAuthSession)
+		// sessionToken = sessionStorage.getItem(LOCAL_AUTH_SESSION)
 
 		// if (!sessionToken) {
 		const cookies = document.cookie.split(";")
@@ -94,7 +94,7 @@ export async function makeAPIRequest<
 		// }
 	} else {
 		const { cookies } = await import("next/headers")
-		const storedCookie = (await cookies()).get(localAuthSession)
+		const storedCookie = (await cookies()).get(LOCAL_AUTH_SESSION)
 		sessionToken = storedCookie ? storedCookie.value : ""
 	}
 
@@ -107,7 +107,7 @@ export async function makeAPIRequest<
 				? {
 						"Content-Type": "application/json",
 						// "ngrok-skip-browser-warning": "true",
-						"X-Engaze-Auth": sessionToken,
+						[AUTH_SESSION]: sessionToken,
 						...customHeaders,
 					}
 				: {
@@ -135,30 +135,8 @@ export async function makeAPIRequest<
 			}
 		}
 
-		let responseJson: ResponseJSON<ResponseT, ParamsT, BodyT, QueryT>
-		try {
-			responseJson = await fetchResponse.json()
-		} catch (parseError) {
-			console.log("Failed to parse response:")
-			return {
-				hasResponse: false,
-				hasError: true,
-				statusCode: statusCode,
-				responseData: undefined,
-				errorData: new Error(JSON.stringify(fetchResponse)),
-			}
-		}
-
-		if (!fetchResponse.ok) {
-			return {
-				hasResponse: false,
-				hasError: true,
-				statusCode: statusCode,
-				responseData: undefined,
-				errorData: new Error(JSON.stringify(responseJson)),
-			}
-		}
-
+		const responseJson = await fetchResponse.json() as ResponseJSON<ResponseT, ParamsT, BodyT, QueryT>
+		
 		return {
 			hasResponse: true,
 			hasError: false,
@@ -169,25 +147,12 @@ export async function makeAPIRequest<
 	} catch (e) {
 		console.log("Network request failed:", e)
 
-		// Check if responsecode is 429
-		if (fetchResponse && fetchResponse.status === StatusCodes.RATE_LIMIT) {
-			return {
-				hasResponse: false,
-				hasError: true,
-				statusCode: StatusCodes.RATE_LIMIT,
-				responseData: undefined,
-				errorData: new Error("Rate limit exceeded"),
-			}
-		}
-
 		return {
 			hasResponse: false,
 			hasError: true,
 			statusCode: 0 as StatusCode,
 			responseData: undefined,
-			errorData: new Error(
-				`Network request failed: ${(e as Error).message}`,
-			),
+			errorData: e as Error,
 		}
 	}
 }

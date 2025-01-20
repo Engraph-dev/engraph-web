@@ -9,7 +9,9 @@ export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
 	return (
 		<AuthLock>
 			<Navbar />
-			{children}
+			<div className="container mx-auto py-8 md:py-12 px-6">
+				{children}
+			</div>
 		</AuthLock>
 	)
 }

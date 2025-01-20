@@ -503,31 +503,13 @@ export function useRequestForm<
 
 		// Global error handling
 		if (apiRequestRet.hasError) {
-			// responseHandlers.onError?.(apiRequestRet.errorData)
-
-			switch (apiRequestRet.statusCode) {
-				case StatusCodes.RATE_LIMIT:
-					responseHandlers.onRateLimit?.()
-					break
-				case StatusCodes.UNAUTHENTICATED:
-					responseHandlers.onUnauthenticated?.()
-					break
-				case StatusCodes.UNAUTHORIZED:
-					responseHandlers.onUnverified?.()
-					break
-				default:
-					console.error("Unhandled error:", apiRequestRet)
-			}
-
-			// setIsLoading(false)
-			// return
+			responseHandlers.onError?.(apiRequestRet.errorData)
+			setIsLoading(false)
+			return
 		}
 
-		const { statusCode, responseData, errorData: error } = apiRequestRet
+		const { statusCode, responseData } = apiRequestRet
 		const responseStatus = responseData?.responseStatus
-		const errorData = error?.message
-			? JSON.parse(error?.message ?? "")
-			: undefined
 
 		switch (statusCode) {
 			case StatusCodes.NOT_FOUND:
@@ -545,8 +527,8 @@ export function useRequestForm<
 				}
 				break
 			case StatusCodes.BAD_REQUEST:
-				if (errorData.responseStatus === "ERR_INVALID_PARAMS") {
-					const { invalidParams } = errorData
+				if (responseData?.responseStatus === "ERR_INVALID_PARAMS") {
+					const { invalidParams } = responseData
 
 					responseHandlers.onInvalidParams?.(invalidParams)
 

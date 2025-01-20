@@ -1,5 +1,5 @@
 import { makeAPIRequest } from "@/lib/api/helpers"
-import { localAuthSession } from "@/lib/config/api"
+import { LOCAL_AUTH_SESSION } from "@/lib/config/api"
 import { PUBLIC_PATHS } from "@/lib/constants/user"
 import { type NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { GetSessionResponse } from "@/lib/defs/engraph-backend/orgs/me/sessions/me"
@@ -38,7 +38,7 @@ export function useSession(strict: boolean = false): UseSessionRet {
 		) {
 			setSessionData(sessionRes.responseData.sessionData)
 			if (strict && PUBLIC_PATHS.includes(pathname)) {
-				router.replace("/home")
+				router.replace("/projects")
 			}
 		}
 		if (
@@ -75,7 +75,7 @@ export function useSession(strict: boolean = false): UseSessionRet {
 				if (closeSessionRes.responseData.responseStatus === "SUCCESS") {
 					setSessionData(null)
 					// await actionHandler.deleteSession()
-					sessionStorage.removeItem(localAuthSession)
+					sessionStorage.removeItem(LOCAL_AUTH_SESSION)
 				} else {
 					console.error(
 						"Failed to close session:",
@@ -87,7 +87,7 @@ export function useSession(strict: boolean = false): UseSessionRet {
 					) {
 						setSessionData(null)
 						// await actionHandler.deleteSession()
-						sessionStorage.removeItem(localAuthSession)
+						sessionStorage.removeItem(LOCAL_AUTH_SESSION)
 					}
 				}
 			}

@@ -36,7 +36,7 @@ export default function LoginForm({ orgId }: { orgId: string }) {
 		responseHandlers: {
 			onSuccess: () => {
 				toast.success("Login successful")
-				router.replace("/home")
+				router.replace("/projects")
 			},
 			onUnauthorized: (stat) => {
 				toast.error(stat)

@@ -1,0 +1,50 @@
+"use client"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
+import { NoParams } from "@/lib/defs/engraph-backend/common"
+import { GetTeamsResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
+import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
+import { useMemo } from "react"
+import AddTeamDialog from "@/components/pages/(protected)/teams/teams-dialog"
+
+
+export default function TeamsSection() {
+
+    const { data, InfiniteScrollWithDebouncing, currentAPI: { isLoading } } = usePaginatedAPI<GetTeamsResponse, NoParams, NoParams, NoParams>({
+        requestUrl: "/orgs/me/teams",
+        requestMethod: "GET",
+        queryParams: {},
+        urlParams: {},
+        bodyParams: {},
+        hasNextPage: (res) => !res || res.orgTeams.length === DEFAULT_PAGE_SIZE
+    })
+
+    const teamList = useMemo(() => data.reduce((acc, page) => [...acc, ...page.orgTeams], [] as GetTeamsResponse["orgTeams"]), [data])
+
+    return (
+        <div>
+            <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-2xl font-bold">Teams</h2>
+                <AddTeamDialog />
+            </div>
+            <InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {teamList.map((team) => (
+                    <Card key={team.teamId}>
+                        <CardHeader>
+                            <CardTitle>{team.teamName}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p>Members: {team.userCount}</p>
+                        </CardContent>
+                    </Card>
+                ))}
+                {!teamList.length && !isLoading && (
+                    <div className="col-span-full row-span-full flex justify-center items-center py-24">
+                        <h2>No Teams Found</h2>
+                    </div>
+                )}
+            </InfiniteScrollWithDebouncing>
+        </div>
+    )
+}

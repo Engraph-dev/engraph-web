@@ -29,6 +29,7 @@ import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { UserRole } from "@prisma/client"
 import { Plus } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 export default function AddUserDialog() {
 	const [isOpen, setIsOpen] = useState(false)
@@ -52,6 +53,17 @@ export default function AddUserDialog() {
 			queryParams: {},
 			urlParams: {},
 		},
+		responseHandlers: {
+			onSuccess: (data) => {
+				toast.success(`${data.userData?.userFirstName} has been added!`)
+			},
+			onError: (data) => {
+				toast.error(data.message)
+			},
+			onInvalidParams: (data) => {
+				toast.info(JSON.stringify(data))
+			}
+		}
 	})
 	const {
 		registerField,

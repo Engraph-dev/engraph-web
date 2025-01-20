@@ -3,10 +3,10 @@ import UpperNavbar from "@/components/pages/(protected)/common/navbar/upper-nav"
 import React from "react"
 
 export default function ProtectedNavbar() {
-	return (
-		<>
-			<UpperNavbar />
-			<SubNavbar />
-		</>
-	)
+    return (
+        <div className="container max-w-screen-2xl mx-auto">
+            <UpperNavbar />
+            <SubNavbar />
+        </div>
+    )
 }
