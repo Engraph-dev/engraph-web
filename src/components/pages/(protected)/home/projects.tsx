@@ -2,9 +2,15 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// import { NoParams } from "@/lib/defs/engraph-backend/common"
+// import { GetProjectsResponse } from "@/lib/defs/engraph-backend/orgs/me/projects"
+// import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
 import { ProjectSourceType, ProjectType } from "@prisma/client"
 import { Plus } from "lucide-react"
-import { useState } from "react"
+import {
+	// useMemo,
+	useState,
+} from "react"
 
 type Project = {
 	projectId: string
@@ -30,6 +36,15 @@ const mockProjects: Project[] = [
 
 export default function ProjectsSection() {
 	const [projects, setProjects] = useState<Project[]>(mockProjects)
+
+	// const { data, fetchNextPage } = usePaginatedAPI<GetProjectsResponse, NoParams, NoParams, NoParams>({
+	//     requestUrl: "/orgs/me/users",
+	//     requestMethod: "GET",
+	//     queryParams: {},
+	//     urlParams: {},
+	//     bodyParams: {}
+	// })
+	// const teamList = useMemo(() => data.reduce((acc, page) => [...acc, ...page.orgProjects], [] as Partial<Project>[]), [data])
 
 	const addProject = () => {
 		const newProject: Project = {

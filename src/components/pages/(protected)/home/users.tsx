@@ -1,5 +1,6 @@
 "use client"
 
+import AddUserDialog from "./users-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { User } from "@prisma/client"
@@ -57,9 +58,7 @@ export default function UsersSection() {
 		<div>
 			<div className="mb-4 flex items-center justify-between">
 				<h2 className="text-2xl font-bold">Users</h2>
-				<Button onClick={addUser}>
-					<Plus className="mr-2 h-4 w-4" /> Add User
-				</Button>
+				<AddUserDialog />
 			</div>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{users.map((user) => (

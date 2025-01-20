@@ -2,8 +2,14 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// import { NoParams } from "@/lib/defs/engraph-backend/common"
+// import { GetTeamsResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
+// import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
 import { Plus } from "lucide-react"
-import { useState } from "react"
+import {
+	// useMemo,
+	useState,
+} from "react"
 
 type Team = {
 	teamId: string
@@ -18,6 +24,15 @@ const mockTeams: Team[] = [
 
 export default function TeamsSection() {
 	const [teams, setTeams] = useState<Team[]>(mockTeams)
+
+	// const { data, fetchNextPage } = usePaginatedAPI<GetTeamsResponse, NoParams, NoParams, NoParams>({
+	//     requestUrl: "/orgs/me/users",
+	//     requestMethod: "GET",
+	//     queryParams: {},
+	//     urlParams: {},
+	//     bodyParams: {}
+	// })
+	// const teamList = useMemo(() => data.reduce((acc, page) => [...acc, ...page.orgTeams], [] as Partial<Team>[]), [data])
 
 	const addTeam = () => {
 		const newTeam: Team = {
