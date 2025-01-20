@@ -9,6 +9,11 @@ export type UsePreparedAPIRequestArgs<
 	lockParams?: boolean
 }
 
+/**
+ * A hook that prepares an API request with the given parameters.
+ * @param `args.lockParams` If true, the hook will not recompute the prepared request when the parameters change. Default false
+ * @returns A callable function with return type `MakeAPIRequestRet<ResponseT, ParamsT, BodyT, QueryT>`
+ */
 export function usePreparedAPIRequest<
 	ResponseT extends {} = {},
 	ParamsT extends {} = {},
@@ -22,7 +27,7 @@ export function usePreparedAPIRequest<
 		requestUrl,
 		urlParams,
 		customHeaders = new Headers(),
-		lockParams,
+		lockParams = false,
 	} = args
 
 	const preparedRequest = useCallback(
