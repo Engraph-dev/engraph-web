@@ -9,6 +9,7 @@ export type UseSessionRet = {
 	refreshSession: () => void
 	closeSession: () => void
 	isLoading: boolean
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 	response: MakeAPIRequestRet<
 		GetSessionResponse,
 		NoParams,
@@ -36,24 +37,6 @@ export function useSession(): UseSessionRet {
 			queryParams: {},
 		})
 		setResponse(sessionRes)
-		// if (
-		// 	sessionRes.hasResponse &&
-		// 	sessionRes.responseData.responseStatus === "SUCCESS"
-		// ) {
-		// 	setSessionData(sessionRes.responseData.sessionData)
-		// if (strict && PUBLIC_PATHS.includes(pathname)) {
-		// 	router.replace("/projects")
-		// }
-		// }
-		// if (
-		// 	strict &&
-		// 	(sessionRes.statusCode === 401 ||
-		// 		(sessionRes.hasResponse &&
-		// 			sessionRes.responseData.responseStatus ===
-		// 				"ERR_UNAUTHENTICATED"))
-		// ) {
-		// 	router.replace("/user/login")
-		// }
 		setIsLoading(false)
 	}, [])
 
@@ -120,5 +103,6 @@ export function useSession(): UseSessionRet {
 		closeSession,
 		isLoading,
 		response,
+		setIsLoading,
 	}
 }
