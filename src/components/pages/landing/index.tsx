@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
 	FeatureCardProps,
 	StepCardProps,
@@ -32,9 +32,15 @@ export function Navbar() {
 			<nav className="hidden rounded-full bg-c1/50 bg-opacity-10 bg-clip-padding backdrop-blur-sm backdrop-filter md:flex">
 				{navLinks.map(NavLink)}
 			</nav>
-			<Button variant="rounded" size="lg" className="py-4">
+			<Link
+				href="/user/login"
+				className={cn(
+					"py-4",
+					buttonVariants({ variant: "rounded", size: "lg" }),
+				)}
+			>
 				Login
-			</Button>
+			</Link>
 		</div>
 	)
 }
@@ -53,12 +59,15 @@ export function Hero() {
 				features, structure, and screenshots in seconds. Focus on coding
 				while we handle the rest.
 			</p>
-			<Button
-				variant="rounded_inverted"
-				className="px-8 py-10 text-xl font-semibold shadow-[0_4px_4px_hsl(var(--c1))] md:px-48 md:text-2xl"
+			<Link
+				href="/org/create"
+				className={cn(
+					buttonVariants({ variant: "rounded_inverted" }),
+					"px-8 py-10 text-xl font-semibold shadow-[0_4px_4px_hsl(var(--c1))] md:px-48 md:text-2xl",
+				)}
 			>
-				Enter GitHub Link to get Started
-			</Button>
+				Get Started
+			</Link>
 		</section>
 	)
 }

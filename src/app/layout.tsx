@@ -1,5 +1,7 @@
-import "./globals.css"
+import "@/app/globals.css"
+import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/wrappers/theme-provider"
+import { SessionProvider } from "@/lib/context/session"
 import type { Metadata } from "next"
 import { DM_Sans } from "next/font/google"
 
@@ -18,18 +20,19 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang={"en"}>
+		<html suppressHydrationWarning lang="en">
 			<body className={`${font.className} min-h-svh antialiased`}>
-				<ThemeProvider
-					attribute={"class"}
-					defaultTheme={"system"}
-					enableSystem
-					disableTransitionOnChange
-				>
-					<main className={"mx-auto min-h-svh max-w-screen-2xl"}>
-						{children}
-					</main>
-				</ThemeProvider>
+				<SessionProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<main>{children}</main>
+						<Toaster />
+					</ThemeProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	)
