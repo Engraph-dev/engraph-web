@@ -34,6 +34,8 @@ export default function UserCard(user: MiniUser) {
 		})
 		if (res.responseData?.responseStatus === "SUCCESS") {
 			toast.success("User added to team!")
+		} else {
+			toast.error(JSON.stringify(res.responseData))
 		}
 	}
 	return (
