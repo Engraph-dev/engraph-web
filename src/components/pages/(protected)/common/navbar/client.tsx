@@ -9,14 +9,14 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useSession } from "@/lib/hooks/useSession"
+import useSessionContext from "@/lib/context/session"
 import { cn } from "@/lib/utils"
 import { LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 export function UserDetails() {
-	const { sessionData } = useSession()
+	const { sessionData } = useSessionContext()
 	return (
 		<div className="flex items-center gap-2">
 			{sessionData ? (
@@ -44,7 +44,7 @@ export function UserDetails() {
 
 export function Account(props: ButtonProps) {
 	const router = useRouter()
-	const { closeSession } = useSession()
+	const { closeSession } = useSessionContext()
 
 	function handleLogout() {
 		closeSession()

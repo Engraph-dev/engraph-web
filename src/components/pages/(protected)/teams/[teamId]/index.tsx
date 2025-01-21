@@ -1,8 +1,8 @@
 "use client"
 
 import FetchingErrorPage from "@/components/pages/(protected)/common/error"
-import TeamMember from "@/components/pages/(protected)/teams/[id]/member"
-import SearchUser from "@/components/pages/(protected)/teams/[id]/search-users"
+import TeamMember from "@/components/pages/(protected)/teams/[teamId]/member"
+import SearchUser from "@/components/pages/(protected)/teams/[teamId]/search-users"
 import TeamLoadingSkeleton from "@/components/skeletons/team-view-skeleton"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
 import {
@@ -12,7 +12,7 @@ import {
 import { useAPIRequest } from "@/lib/hooks/useAPI"
 import React from "react"
 
-export default function TeamViewPage({ id }: { id: string }) {
+export default function TeamViewPage({ teamId }: { teamId: string }) {
 	const { responseData, isLoading } = useAPIRequest<
 		GetTeamResponse,
 		GetTeamParams,
@@ -24,7 +24,7 @@ export default function TeamViewPage({ id }: { id: string }) {
 		bodyParams: {},
 		queryParams: {},
 		urlParams: {
-			teamId: id,
+			teamId,
 		},
 	})
 
@@ -35,14 +35,17 @@ export default function TeamViewPage({ id }: { id: string }) {
 	if (responseData?.responseStatus !== "SUCCESS") {
 		return (
 			<FetchingErrorPage
-				text={"An Error occured while fetching team data for id: " + id}
+				text={
+					"An Error occured while fetching team data for id: " +
+					teamId
+				}
 			/>
 		)
 	}
 
 	const teamData = responseData.teamData
 	return (
-		<div className="container mx-auto p-4">
+		<div>
 			<h1 className="mb-4 text-2xl font-bold">{teamData.teamName}</h1>
 			<p className="mb-4 text-sm text-gray-500">
 				Team ID: {teamData.teamId}

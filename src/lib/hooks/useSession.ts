@@ -1,25 +1,28 @@
-import { makeAPIRequest } from "@/lib/api/helpers"
+import { MakeAPIRequestRet, makeAPIRequest } from "@/lib/api/helpers"
 import { LOCAL_AUTH_SESSION } from "@/lib/config/api"
-import { PUBLIC_PATHS } from "@/lib/constants/user"
 import { type NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { GetSessionResponse } from "@/lib/defs/engraph-backend/orgs/me/sessions/me"
-import { usePathname, useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 
 export type UseSessionRet = {
 	sessionData: GetSessionResponse["sessionData"] | null
 	refreshSession: () => void
 	closeSession: () => void
+	isLoading: boolean
+	response: MakeAPIRequestRet<
+		GetSessionResponse,
+		NoParams,
+		NoParams,
+		NoParams
+	> | null
 }
 
-export function useSession(strict: boolean = false): UseSessionRet {
-	const [sessionData, setSessionData] = useState<
-		GetSessionResponse["sessionData"] | null
-	>(null)
-	const router = useRouter()
-	const pathname = usePathname()
+export function useSession(): UseSessionRet {
+	const [response, setResponse] = useState<UseSessionRet["response"]>(null)
+	const [isLoading, setIsLoading] = useState(true)
 
 	const getSession = useCallback(async () => {
+		setIsLoading(true)
 		const sessionRes = await makeAPIRequest<
 			GetSessionResponse,
 			NoParams,
@@ -32,25 +35,27 @@ export function useSession(strict: boolean = false): UseSessionRet {
 			bodyParams: {},
 			queryParams: {},
 		})
-		if (
-			sessionRes.hasResponse &&
-			sessionRes.responseData.responseStatus === "SUCCESS"
-		) {
-			setSessionData(sessionRes.responseData.sessionData)
-			if (strict && PUBLIC_PATHS.includes(pathname)) {
-				router.replace("/projects")
-			}
-		}
-		if (
-			strict &&
-			(sessionRes.statusCode === 401 ||
-				(sessionRes.hasResponse &&
-					sessionRes.responseData.responseStatus ===
-						"ERR_UNAUTHENTICATED"))
-		) {
-			router.replace("/user/login")
-		}
-	}, [pathname, router, strict])
+		setResponse(sessionRes)
+		// if (
+		// 	sessionRes.hasResponse &&
+		// 	sessionRes.responseData.responseStatus === "SUCCESS"
+		// ) {
+		// 	setSessionData(sessionRes.responseData.sessionData)
+		// if (strict && PUBLIC_PATHS.includes(pathname)) {
+		// 	router.replace("/projects")
+		// }
+		// }
+		// if (
+		// 	strict &&
+		// 	(sessionRes.statusCode === 401 ||
+		// 		(sessionRes.hasResponse &&
+		// 			sessionRes.responseData.responseStatus ===
+		// 				"ERR_UNAUTHENTICATED"))
+		// ) {
+		// 	router.replace("/user/login")
+		// }
+		setIsLoading(false)
+	}, [])
 
 	const refreshSession = useCallback(() => {
 		getSession()
@@ -73,7 +78,7 @@ export function useSession(strict: boolean = false): UseSessionRet {
 
 			if (closeSessionRes.hasResponse) {
 				if (closeSessionRes.responseData.responseStatus === "SUCCESS") {
-					setSessionData(null)
+					setResponse(null)
 					// await actionHandler.deleteSession()
 					sessionStorage.removeItem(LOCAL_AUTH_SESSION)
 				} else {
@@ -85,7 +90,7 @@ export function useSession(strict: boolean = false): UseSessionRet {
 						closeSessionRes.responseData.responseStatus ===
 						"ERR_UNAUTHENTICATED"
 					) {
-						setSessionData(null)
+						setResponse(null)
 						// await actionHandler.deleteSession()
 						sessionStorage.removeItem(LOCAL_AUTH_SESSION)
 					}
@@ -104,9 +109,16 @@ export function useSession(strict: boolean = false): UseSessionRet {
 		refreshSession()
 	}, [refreshSession])
 
+	const sessionData =
+		response?.responseData?.responseStatus === "SUCCESS"
+			? response.responseData.sessionData
+			: null
+
 	return {
 		sessionData,
 		refreshSession,
 		closeSession,
+		isLoading,
+		response,
 	}
 }

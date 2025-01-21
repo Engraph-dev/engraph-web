@@ -1,3 +1,4 @@
+import AuthLock from "@/components/wrappers/auth-lock"
 import dynamic from "next/dynamic"
 import React from "react"
 
@@ -9,7 +10,7 @@ export default function RootAuthLayout({
 	return (
 		<div className="grid *:[grid-area:1/-1]">
 			<MovingDotsBg />
-			{children}
+			<AuthLock>{children}</AuthLock>
 		</div>
 	)
 }

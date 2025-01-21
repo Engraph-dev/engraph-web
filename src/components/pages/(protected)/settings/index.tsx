@@ -2,15 +2,15 @@
 
 import { Button } from "@/components/ui/button"
 import { makeAPIRequest } from "@/lib/api/helpers"
+import useSessionContext from "@/lib/context/session"
 import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { VerifyTokenParams } from "@/lib/defs/engraph-backend/orgs/me/auth"
-import { useSession } from "@/lib/hooks/useSession"
 import { BadgeHelp, LogOutIcon, VerifiedIcon } from "lucide-react"
 import React from "react"
 import { toast } from "sonner"
 
 export default function SettingsPage() {
-	const { sessionData, closeSession } = useSession()
+	const { sessionData, closeSession } = useSessionContext()
 	const isVerified =
 		!sessionData?.orgId || sessionData?.sessionUser.userVerified
 	async function handleVerify() {
