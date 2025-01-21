@@ -15,6 +15,7 @@ export type FeatureCardProps = {
 	title: string
 	description: string
 }
+
 const commonImg = "/landing/image.png"
 export const featureCardData: FeatureCardProps[] = [
 	{
@@ -125,5 +126,82 @@ export const stepsData: StepCardProps[] = [
 					"Offers consistent and insightful summaries, saving time and enhancing project clarity.",
 			},
 		],
+	},
+]
+
+export type PlanFeature = {
+	title: string
+	description: string
+}
+
+export type PricingPlan = {
+	id: string
+	name: string
+	price: number
+	billingCycle: string
+	features: PlanFeature[]
+	idealFor: string
+}
+
+export const pricingPlans: PricingPlan[] = [
+	{
+		id: "pro-plan",
+		name: "Pro Plan",
+		price: 15,
+		billingCycle: "per month",
+		features: [
+			{
+				title: "Unlimited README Generations",
+				description: "Scale with no restrictions on README creation.",
+			},
+			{
+				title: "Full Security & License Compliance",
+				description: "In-depth security audits and licensing reports.",
+			},
+		],
+		idealFor: "Freelancers and small teams",
+	},
+	{
+		id: "team-plan",
+		name: "Team Plan",
+		price: 50,
+		billingCycle: "per month",
+		features: [
+			{
+				title: "Onboarding & Training",
+				description:
+					"Custom onboarding and training sessions for teams.",
+			},
+			{
+				title: "Dedicated Account Manager",
+				description:
+					"Personalized assistance for account management and technical needs.",
+			},
+		],
+		idealFor: "Startups and development teams",
+	},
+	{
+		id: "enterprise-plan",
+		name: "Enterprise Plan",
+		price: 150,
+		billingCycle: "per month",
+		features: [
+			{
+				title: "Unlimited README Generations",
+				description: "Scale with no restrictions on README creation.",
+			},
+			{
+				title: "Onboarding & Training",
+				description:
+					"Custom onboarding and training sessions for teams.",
+			},
+			{
+				title: "Dedicated Account Manager",
+				description:
+					"Personalized assistance for account management and technical needs.",
+			},
+		],
+		idealFor:
+			"Large companies with extensive codebases & complex documentation needs.",
 	},
 ]
