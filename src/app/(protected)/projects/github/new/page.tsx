@@ -1,4 +1,6 @@
+import NewGithubProjectPage from "@/components/pages/(protected)/projects/github/new"
 import { getInstallationRepositories } from "@/lib/github"
+import { Repositories } from "@/lib/types/github"
 import { redirect } from "next/navigation"
 
 type GithubCallbackSearchParams = {
@@ -19,10 +21,11 @@ export default async function GithubCallback(props: GithubCallbackPageProps) {
 		redirect("/")
 	}
 
-	const installationRepositories =
-		await getInstallationRepositories(installation_id)
+	const installationRepositories = (await getInstallationRepositories(
+		installation_id,
+	)) as Repositories
 
-	console.log({ installationRepositories })
+	console.log(installationRepositories)
 
-	return <>{JSON.stringify(installationRepositories)}</>
+	return <NewGithubProjectPage repositories={installationRepositories} />
 }
