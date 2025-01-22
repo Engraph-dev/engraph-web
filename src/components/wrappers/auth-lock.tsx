@@ -13,7 +13,6 @@ export default function AuthLock({ children }: { children: React.ReactNode }) {
 	const isPublic = PUBLIC_PATHS.includes(pathname)
 
 	useEffect(() => {
-		console.dir({ sessionData })
 		if (isLoading) return
 		if (!sessionData && !isPublic) {
 			router.replace("/user/login")

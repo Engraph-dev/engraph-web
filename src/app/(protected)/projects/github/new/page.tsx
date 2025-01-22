@@ -25,7 +25,5 @@ export default async function GithubCallback(props: GithubCallbackPageProps) {
 		installation_id,
 	)) as Repositories
 
-	console.log(installationRepositories)
-
 	return <NewGithubProjectPage repositories={installationRepositories} />
 }

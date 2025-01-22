@@ -3,43 +3,16 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { makeAPIRequest } from "@/lib/api/helpers"
+import useTeamIdContext from "@/lib/context/team-id"
 import { MiniUser } from "@/lib/defs/engraph-backend/common/users"
-import {
-	AddTeamUserParams,
-	AddTeamUserResponse,
-} from "@/lib/defs/engraph-backend/orgs/me/teams/[teamId]/users/[userId]"
 import { UserRole } from "@prisma/client"
 import { CheckCircle2, XCircle } from "lucide-react"
-import { useParams } from "next/navigation"
 import React from "react"
-import { toast } from "sonner"
 
-export default function UserCard(user: MiniUser) {
-	const { teamId } = useParams()
-	async function handleAddUser() {
-		if (!teamId) return
-		const res = await makeAPIRequest<
-			AddTeamUserResponse,
-			AddTeamUserParams
-		>({
-			requestMethod: "POST",
-			requestUrl: "/orgs/me/teams/:teamId/users/:userId",
-			bodyParams: {},
-			queryParams: {},
-			urlParams: {
-				teamId: String(teamId),
-				userId: user.userId,
-			},
-		})
-		if (res.responseData?.responseStatus === "SUCCESS") {
-			toast.success("User added to team!")
-		} else {
-			toast.error(JSON.stringify(res.responseData))
-		}
-	}
+export default function UserCard({ user }: { user: MiniUser }) {
+	const { addUser } = useTeamIdContext()
 	return (
-		<Card key={user.userId}>
+		<Card>
 			<CardContent className="flex items-center justify-between p-4">
 				<div>
 					<p className="font-semibold">
@@ -62,7 +35,7 @@ export default function UserCard(user: MiniUser) {
 					) : (
 						<XCircle className="text-red-500" size={20} />
 					)}
-					<Button onClick={() => void handleAddUser()}>
+					<Button onClick={() => void addUser({ user })}>
 						Add to Team
 					</Button>
 				</div>

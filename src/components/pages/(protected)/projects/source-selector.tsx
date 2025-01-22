@@ -7,7 +7,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import "@radix-ui/react-dropdown-menu"
 import { Github, Plus } from "lucide-react"
 
 export default function ProjectSourceSelector() {
@@ -15,7 +14,7 @@ export default function ProjectSourceSelector() {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button>
-					Add Project <Plus />
+					Add Project <Plus className="ml-2 h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align={"end"}>

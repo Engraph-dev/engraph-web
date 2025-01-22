@@ -1,33 +1,15 @@
 "use client"
 
+import TeamInfo from "./team-info"
 import FetchingErrorPage from "@/components/pages/(protected)/common/error"
 import TeamMember from "@/components/pages/(protected)/teams/[teamId]/member"
 import SearchUser from "@/components/pages/(protected)/teams/[teamId]/search-users"
 import TeamLoadingSkeleton from "@/components/skeletons/team-view-skeleton"
-import { NoParams } from "@/lib/defs/engraph-backend/common"
-import {
-	GetTeamParams,
-	GetTeamResponse,
-} from "@/lib/defs/engraph-backend/orgs/me/teams/[teamId]"
-import { useAPIRequest } from "@/lib/hooks/useAPI"
+import useTeamIdContext from "@/lib/context/team-id"
 import React from "react"
 
 export default function TeamViewPage({ teamId }: { teamId: string }) {
-	const { responseData, isLoading } = useAPIRequest<
-		GetTeamResponse,
-		GetTeamParams,
-		NoParams,
-		NoParams
-	>({
-		requestUrl: "/orgs/me/teams/:teamId",
-		requestMethod: "GET",
-		bodyParams: {},
-		queryParams: {},
-		urlParams: {
-			teamId,
-		},
-	})
-
+	const { isLoading, responseData, users } = useTeamIdContext()
 	if (isLoading) {
 		return <TeamLoadingSkeleton />
 	}
@@ -46,17 +28,11 @@ export default function TeamViewPage({ teamId }: { teamId: string }) {
 	const teamData = responseData.teamData
 	return (
 		<div>
-			<h1 className="mb-4 text-2xl font-bold">{teamData.teamName}</h1>
-			<p className="mb-4 text-sm text-gray-500">
-				Team ID: {teamData.teamId}
-			</p>
-			<p className="mb-8 text-sm text-gray-500">
-				Organization ID: {teamData.teamOrgId}
-			</p>
+			<TeamInfo data={teamData} />
 
-			<h2 className="mb-4 text-xl font-semibold">Team Members</h2>
+			<h2 className="mb-4 mt-8 text-xl font-semibold">Team Members</h2>
 			<div className="mb-8 space-y-4">
-				{teamData.teamUsers.map((user) => (
+				{users.map((user) => (
 					<TeamMember key={user.userId} user={user} />
 				))}
 			</div>

@@ -1,4 +1,5 @@
 import ProjectIdPage from "@/components/pages/(protected)/projects/[projectId]"
+import { ProjectIdProvider } from "@/lib/context/project-id"
 import React from "react"
 
 export default async function Page({
@@ -7,5 +8,9 @@ export default async function Page({
 	params: Promise<{ projectId: string }>
 }) {
 	const { projectId } = await params
-	return <ProjectIdPage projectId={projectId} />
+	return (
+		<ProjectIdProvider projectId={projectId}>
+			<ProjectIdPage />
+		</ProjectIdProvider>
+	)
 }

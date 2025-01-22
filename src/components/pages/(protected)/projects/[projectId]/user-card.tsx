@@ -3,19 +3,17 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import useProjectIdContext from "@/lib/context/project-id"
 import { MiniUser } from "@/lib/defs/engraph-backend/common/users"
 import { UserRole } from "@prisma/client"
 import { CheckCircle2, XCircle } from "lucide-react"
-import { useParams } from "next/navigation"
 import React from "react"
 
-export default function UserCard(user: MiniUser) {
-	const { projectId } = useParams()
-	async function handleAddUser() {
-		if (!projectId) return
-	}
+export default function UserCard({ user }: { user: MiniUser }) {
+	const { addUser, userList } = useProjectIdContext()
+	const isAdded = userList.some((u) => u.userId === user.userId)
 	return (
-		<Card key={user.userId}>
+		<Card>
 			<CardContent className="flex items-center justify-between p-4">
 				<div>
 					<p className="font-semibold">
@@ -38,7 +36,7 @@ export default function UserCard(user: MiniUser) {
 					) : (
 						<XCircle className="text-red-500" size={20} />
 					)}
-					<Button onClick={() => void handleAddUser()}>
+					<Button disabled={isAdded} onClick={() => addUser(user)}>
 						Add User
 					</Button>
 				</div>

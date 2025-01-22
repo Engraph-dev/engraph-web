@@ -77,7 +77,9 @@ export default function SearchUser() {
 					))}
 					className="space-y-2"
 				>
-					{users.map(UserCard)}
+					{users.map((user) => (
+						<UserCard user={user} key={user.userId} />
+					))}
 				</InfiniteScrollWithDebouncing>
 			) : (
 				<InfiniteScrollWithDebouncingAll
@@ -86,7 +88,9 @@ export default function SearchUser() {
 					))}
 					className="space-y-2"
 				>
-					{allUsers.map(UserCard)}
+					{allUsers.map((user) => (
+						<UserCard user={user} key={user.userId} />
+					))}
 				</InfiniteScrollWithDebouncingAll>
 			)}
 		</div>

@@ -1,3 +1,4 @@
+import ProjectIdTeamInfoSkeleton from "./project-id-team-info-skeleton"
 import ProjectTeamRowSkeleton from "@/components/skeletons/project-team-row-skeleton"
 import ProjectUserRowSkeleton from "@/components/skeletons/project-user-row-skeleton"
 import {
@@ -11,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {
 	Table,
 	TableBody,
-	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -20,31 +20,7 @@ import {
 export default function ProjectIdPageSkeleton() {
 	return (
 		<div className="space-y-6">
-			<Card>
-				<CardHeader>
-					<CardTitle>Project Info</CardTitle>
-					<CardDescription>Details about the project</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Table>
-						<TableBody>
-							{Array(8)
-								.fill(0)
-								.map((_, index) => (
-									<TableRow key={index}>
-										<TableCell className="font-medium">
-											<Skeleton className="h-4 w-[100px]" />
-										</TableCell>
-										<TableCell>
-											<Skeleton className="h-4 w-[200px]" />
-										</TableCell>
-									</TableRow>
-								))}
-						</TableBody>
-					</Table>
-				</CardContent>
-			</Card>
-
+			<ProjectIdTeamInfoSkeleton />
 			<Card>
 				<CardHeader>
 					<CardTitle>Project Teams</CardTitle>
