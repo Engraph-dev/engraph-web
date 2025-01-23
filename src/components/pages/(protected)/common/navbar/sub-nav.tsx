@@ -16,7 +16,7 @@ export function SubNavbar() {
 	const pathname = usePathname()
 
 	return (
-		<div className="dark border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+		<div className="border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 			<ScrollArea>
 				<ScrollBar orientation="horizontal" className="invisible" />
 				<nav className="flex h-12 items-center space-x-4 px-4 md:px-6">

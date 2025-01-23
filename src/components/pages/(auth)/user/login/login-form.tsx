@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { TextField } from "@/components/ui/custom-form"
-import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
+import useSessionContext from "@/lib/context/session"
+import { NoParams } from "@/lib/defs/engraph-backend/common"
 import {
+	CredentialsResponse,
 	LoginCredentialsBody,
 	LoginCredentialsParams,
 } from "@/lib/defs/engraph-backend/orgs/[orgId]/auth"
@@ -15,8 +17,9 @@ import { toast } from "sonner"
 
 export default function LoginForm({ orgId }: { orgId: string }) {
 	const router = useRouter()
+	const { setIsLoading } = useSessionContext()
 	const loginCredentialsForm = useRequestForm<
-		ResJSON,
+		CredentialsResponse,
 		LoginCredentialsParams,
 		LoginCredentialsBody,
 		NoParams
@@ -37,6 +40,7 @@ export default function LoginForm({ orgId }: { orgId: string }) {
 			onSuccess: () => {
 				toast.success("Login successful")
 				router.replace("/projects")
+				setIsLoading(true)
 			},
 			onUnauthorized: (stat) => {
 				toast.error(stat)

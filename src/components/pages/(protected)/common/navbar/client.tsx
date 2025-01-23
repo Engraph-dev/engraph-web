@@ -14,9 +14,15 @@ import { cn } from "@/lib/utils"
 import { LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export function UserDetails() {
 	const { sessionData } = useSessionContext()
+	function handleCopy() {
+		if (!sessionData?.orgId) return
+		navigator.clipboard.writeText(sessionData?.orgId)
+		toast.info("Organization ID copied to clipboard")
+	}
 	return (
 		<div className="flex items-center gap-2">
 			{sessionData ? (
@@ -32,11 +38,15 @@ export function UserDetails() {
 				<Skeleton className="h-6 w-32 rounded-md" />
 			)}
 			{sessionData ? (
-				<Badge variant="secondary" className="rounded-full">
+				<Badge
+					onClick={handleCopy}
+					variant="secondary"
+					className="hidden cursor-pointer rounded-full transition-all active:scale-95 md:block"
+				>
 					{sessionData.orgId}
 				</Badge>
 			) : (
-				<Skeleton className="h-4 w-24 rounded-full" />
+				<Skeleton className="hidden h-4 w-24 rounded-full md:block" />
 			)}
 		</div>
 	)

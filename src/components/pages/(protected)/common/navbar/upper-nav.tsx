@@ -4,7 +4,9 @@ import {
 } from "@/components/pages/(protected)/common/navbar/client"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { Bell, HelpCircle } from "lucide-react"
+import NavbarBreadCrumb from "@/components/ux/bread-crumbs"
+import { ModeToggle } from "@/components/ux/mode-togggle"
+import { HelpCircle } from "lucide-react"
 import Link from "next/link"
 import * as React from "react"
 
@@ -23,13 +25,12 @@ export default function UpperNavbar() {
 						</Link>
 						<Separator orientation="vertical" className="h-6" />
 						<UserDetails />
+						<Separator orientation="vertical" className="h-6" />
+						<NavbarBreadCrumb />
 					</div>
-					<div className="hidden items-center gap-4 md:flex">
+					<div className="hidden items-center gap-4 lg:flex">
 						<Button variant="ghost" size="sm">
 							Feedback
-						</Button>
-						<Button variant="ghost" size="sm">
-							Changelog
 						</Button>
 						<Button variant="ghost" size="icon" className="h-8 w-8">
 							<HelpCircle className="h-4 w-4" />
@@ -39,13 +40,10 @@ export default function UpperNavbar() {
 							Docs
 						</Button>
 						<Separator orientation="vertical" className="h-6" />
-						<Button variant="ghost" size="icon" className="h-8 w-8">
-							<Bell className="h-4 w-4" />
-							<span className="sr-only">Notifications</span>
-						</Button>
+						<ModeToggle />
 						<Account />
 					</div>
-					<Account className="block md:hidden" />
+					<Account className="block lg:hidden" />
 				</div>
 			</header>
 		</div>
