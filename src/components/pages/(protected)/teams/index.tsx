@@ -4,7 +4,7 @@ import AddTeamDialog from "@/components/pages/(protected)/teams/teams-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
-import { GetTeamsResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
+import { TeamsResponse } from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
 import Link from "next/link"
 import { useMemo } from "react"
@@ -14,7 +14,7 @@ export default function TeamsSection() {
 		data,
 		InfiniteScrollWithDebouncing,
 		currentAPI: { isLoading },
-	} = usePaginatedAPI<GetTeamsResponse, NoParams, NoParams, NoParams>({
+	} = usePaginatedAPI<TeamsResponse, NoParams, NoParams, NoParams>({
 		requestUrl: "/orgs/me/teams",
 		requestMethod: "GET",
 		queryParams: {},
@@ -27,7 +27,7 @@ export default function TeamsSection() {
 		() =>
 			data.reduce(
 				(acc, page) => [...acc, ...page.orgTeams],
-				[] as GetTeamsResponse["orgTeams"],
+				[] as TeamsResponse["orgTeams"],
 			),
 		[data],
 	)
