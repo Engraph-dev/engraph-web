@@ -1,7 +1,9 @@
+import { ROLE_HIERARCHY } from "../constants/user"
 import { MakeAPIRequestRet, makeAPIRequest } from "@/lib/api/helpers"
 import { LOCAL_AUTH_SESSION } from "@/lib/config/api"
 import { type NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { GetSessionResponse } from "@/lib/defs/engraph-backend/orgs/me/sessions/me"
+import { UserRole } from "@prisma/client"
 import { useCallback, useEffect, useState } from "react"
 
 export type UseSessionRet = {
@@ -16,6 +18,8 @@ export type UseSessionRet = {
 		NoParams,
 		NoParams
 	> | null
+	isMe(id: string): boolean
+	isRoleAllowed(role: UserRole): boolean
 }
 
 export function useSession(): UseSessionRet {
@@ -97,6 +101,26 @@ export function useSession(): UseSessionRet {
 			? response.responseData.sessionData
 			: null
 
+	const isMe = useCallback(
+		(id: string) => {
+			if (!sessionData) return false
+			return sessionData.userId === id
+		},
+		[sessionData],
+	)
+
+	const isRoleAllowed = useCallback(
+		(role: UserRole) => {
+			if (!sessionData) return false
+			const allowedIndex = ROLE_HIERARCHY.indexOf(role)
+			const userIndex = ROLE_HIERARCHY.indexOf(
+				sessionData.sessionUser.userRole as UserRole,
+			)
+			return userIndex <= allowedIndex
+		},
+		[sessionData],
+	)
+
 	return {
 		sessionData,
 		refreshSession,
@@ -104,5 +128,7 @@ export function useSession(): UseSessionRet {
 		isLoading,
 		response,
 		setIsLoading,
+		isRoleAllowed,
+		isMe,
 	}
 }

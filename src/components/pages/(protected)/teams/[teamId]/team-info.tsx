@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card"
 import { TextField } from "@/components/ui/custom-form"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
+import AuthorizationWrapper from "@/components/wrappers/authorization-wrappers"
 import { ResJSON } from "@/lib/defs/engraph-backend/common"
 import {
 	GetTeamResponse,
@@ -15,6 +16,8 @@ import {
 	UpdateTeamParams,
 } from "@/lib/defs/engraph-backend/orgs/me/teams/[teamId]"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
+import { camelCaseToNormal } from "@/lib/utils"
+import { UserRole } from "@prisma/client"
 import { Edit, Save } from "lucide-react"
 import { useParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -68,31 +71,35 @@ export default function TeamInfo({
 
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle className="flex w-full items-center justify-between gap-2">
-					Team Info
-					<Button onClick={handleEditToggle}>
+			<div className="flex flex-col justify-between md:flex-row">
+				<CardHeader>
+					<CardTitle className="flex w-full items-center justify-between gap-2">
+						Team Info
+					</CardTitle>
+					<CardDescription>Details about the team</CardDescription>
+				</CardHeader>
+				<AuthorizationWrapper role={UserRole.Admin}>
+					<Button
+						className="mx-auto w-4/5 md:mx-0 md:mr-6 md:mt-6 md:w-fit"
+						onClick={handleEditToggle}
+					>
 						{isEditing ? <Save /> : <Edit />}
 						{isEditing ? "Save" : "Edit"}
 					</Button>
-				</CardTitle>
-				<CardDescription>Details about the team</CardDescription>
-			</CardHeader>
+				</AuthorizationWrapper>
+			</div>
 			<CardContent>
 				<Table>
 					<TableBody>
 						{Object.entries(data).map(
-							([key, value]) =>
-								!Array.isArray(value) && (
+							([key]) =>
+								IS_EDITABLE.includes(key as EditableKey) && (
 									<TableRow key={key}>
 										<TableCell className="font-medium">
-											{key}
+											{camelCaseToNormal(key)}
 										</TableCell>
 										<TableCell>
-											{isEditing &&
-											IS_EDITABLE.includes(
-												key as EditableKey,
-											) ? (
+											{isEditing ? (
 												<TextField
 													label={null}
 													form={updateTeamForm}
@@ -103,12 +110,8 @@ export default function TeamInfo({
 														),
 													}}
 												/>
-											) : IS_EDITABLE.includes(
-													key as EditableKey,
-											  ) ? (
-												bodyParams[key as EditableKey]
 											) : (
-												value
+												bodyParams[key as EditableKey]
 											)}
 										</TableCell>
 									</TableRow>

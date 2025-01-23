@@ -28,18 +28,6 @@ export default function SearchUser() {
 		hasNextPage: (data) =>
 			!data || data.orgUsers.length === DEFAULT_PAGE_SIZE,
 	})
-	const {
-		InfiniteScrollWithDebouncing: InfiniteScrollWithDebouncingAll,
-		data: allUsersData,
-	} = usePaginatedAPI<GetUsersResponse>({
-		requestMethod: "GET",
-		requestUrl: "/orgs/me/users",
-		urlParams: {},
-		queryParams: {},
-		bodyParams: {},
-		hasNextPage: (data) =>
-			!data || data.orgUsers.length === DEFAULT_PAGE_SIZE,
-	})
 
 	const users = useMemo(
 		() =>
@@ -50,27 +38,17 @@ export default function SearchUser() {
 		[data],
 	)
 
-	const allUsers = useMemo(
-		() =>
-			allUsersData.reduce(
-				(acc, curr) => [...acc, ...curr.orgUsers],
-				[] as GetUsersResponse["orgUsers"],
-			),
-		[allUsersData],
-	)
-
 	return (
 		<div>
 			<div className="mb-4 mt-2 flex space-x-2">
 				<Input
 					type="text"
-					placeholder="Search users..."
+					placeholder="Search users to add..."
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
-				<Button>Search</Button>
 			</div>
-			{searchTerm ? (
+			{searchTerm && (
 				<InfiniteScrollWithDebouncing
 					skeleton={Array.from({ length: 4 }).map((_, idx) => (
 						<UserCardSkeleton key={idx} />
@@ -81,17 +59,6 @@ export default function SearchUser() {
 						<UserCard user={user} key={user.userId} />
 					))}
 				</InfiniteScrollWithDebouncing>
-			) : (
-				<InfiniteScrollWithDebouncingAll
-					skeleton={Array.from({ length: 4 }).map((_, idx) => (
-						<UserCardSkeleton key={idx} />
-					))}
-					className="space-y-2"
-				>
-					{allUsers.map((user) => (
-						<UserCard user={user} key={user.userId} />
-					))}
-				</InfiniteScrollWithDebouncingAll>
 			)}
 		</div>
 	)

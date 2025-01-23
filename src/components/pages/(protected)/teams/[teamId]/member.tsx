@@ -1,12 +1,16 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import AuthorizationWrapper from "@/components/wrappers/authorization-wrappers"
+import useSessionContext from "@/lib/context/session"
 import useTeamIdContext from "@/lib/context/team-id"
 import { MiniUser } from "@/lib/defs/engraph-backend/common/users"
+import { UserRole } from "@prisma/client"
 import { CheckCircle2, Trash, XCircle } from "lucide-react"
 
 export default function TeamMember({ user }: { user: MiniUser }) {
 	const { removeUser } = useTeamIdContext()
+	const { isMe } = useSessionContext()
 	return (
 		<Card>
 			<CardContent className="flex items-center justify-between p-4">
@@ -24,22 +28,31 @@ export default function TeamMember({ user }: { user: MiniUser }) {
 							)}
 						</span>
 					</p>
-					<p className="text-sm text-gray-500">{user.userMail}</p>
+					<p className="hidden text-sm text-gray-500 md:block">
+						{user.userMail}
+					</p>
 				</div>
 				<div className="flex items-center space-x-2">
 					<Badge
 						variant={
-							user.userRole === "Owner" ? "default" : "secondary"
+							user.userRole === UserRole.Owner
+								? "default"
+								: "secondary"
 						}
 					>
 						{user.userRole}
 					</Badge>
-					<Button
-						onClick={() => void removeUser({ user })}
-						variant="destructive"
+					<AuthorizationWrapper
+						role={UserRole.Admin}
+						block={isMe(user.userId)}
 					>
-						<Trash />
-					</Button>
+						<Button
+							onClick={() => void removeUser({ user })}
+							variant="destructive"
+						>
+							<Trash />
+						</Button>
+					</AuthorizationWrapper>
 				</div>
 			</CardContent>
 		</Card>

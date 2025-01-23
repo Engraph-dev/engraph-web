@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import useProjectIdContext from "@/lib/context/project-id"
 import { MiniUser } from "@/lib/defs/engraph-backend/common/users"
 import { UserRole } from "@prisma/client"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, Plus, XCircle } from "lucide-react"
 import React from "react"
 
 export default function UserCard({ user }: { user: MiniUser }) {
@@ -19,7 +19,9 @@ export default function UserCard({ user }: { user: MiniUser }) {
 					<p className="font-semibold">
 						{user.userFirstName} {user.userLastName}
 					</p>
-					<p className="text-sm text-gray-500">{user.userMail}</p>
+					<p className="hidden text-sm text-gray-500 md:block">
+						{user.userMail}
+					</p>
 				</div>
 				<div className="flex items-center space-x-2">
 					<Badge
@@ -37,7 +39,10 @@ export default function UserCard({ user }: { user: MiniUser }) {
 						<XCircle className="text-red-500" size={20} />
 					)}
 					<Button disabled={isAdded} onClick={() => addUser(user)}>
-						Add User
+						<span className="hidden md:block">Add User</span>
+						<span className="block md:hidden">
+							<Plus />
+						</span>
 					</Button>
 				</div>
 			</CardContent>

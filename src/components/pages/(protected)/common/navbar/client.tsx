@@ -43,7 +43,7 @@ export function UserDetails() {
 					variant="secondary"
 					className="hidden cursor-pointer rounded-full transition-all active:scale-95 md:block"
 				>
-					{sessionData.orgId}
+					{sessionData?.sessionUser?.userRole}
 				</Badge>
 			) : (
 				<Skeleton className="hidden h-4 w-24 rounded-full md:block" />
