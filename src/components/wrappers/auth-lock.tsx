@@ -22,5 +22,10 @@ export default function AuthLock({ children }: { children: React.ReactNode }) {
 		}
 	}, [isLoading, sessionData, pathname, router, isPublic])
 
+	useEffect(() => {
+		if (!window) return
+		window.scrollTo(0, 0)
+	}, [pathname])
+
 	return <>{children}</>
 }

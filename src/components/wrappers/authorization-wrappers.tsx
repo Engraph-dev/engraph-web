@@ -22,8 +22,8 @@ type AuthorizationWrapperProps = {
 
 function NotAllowedContent({ page = false }: NotAllowedContentProps) {
 	return page ? (
-		<div className="flex py-48 text-center text-xl font-semibold">
-			You are not authorized to view this Page
+		<div className="mx-auto flex w-fit py-48 text-center text-2xl font-semibold md:text-4xl">
+			You are not authorized to view this Page!
 		</div>
 	) : (
 		<></>

@@ -139,16 +139,18 @@ export default function TeamInfo() {
 											</Select>
 										</TableCell>
 									</AuthorizationWrapper>
-									<TableCell className="flex items-center justify-end">
-										<Button
-											onClick={() =>
-												removeTeam(team.teamId)
-											}
-											variant="destructive"
-										>
-											<Trash />
-										</Button>
-									</TableCell>
+									<AuthorizationWrapper role={UserRole.Admin}>
+										<TableCell className="flex items-center justify-end">
+											<Button
+												onClick={() =>
+													removeTeam(team.teamId)
+												}
+												variant="destructive"
+											>
+												<Trash />
+											</Button>
+										</TableCell>
+									</AuthorizationWrapper>
 								</TableRow>
 							))}
 						</TableBody>

@@ -41,7 +41,7 @@ export function UserDetails() {
 				<Badge
 					onClick={handleCopy}
 					variant="secondary"
-					className="hidden cursor-pointer rounded-full transition-all active:scale-95 md:block"
+					className="hidden cursor-pointer rounded-full bg-foreground/30 transition-all md:block"
 				>
 					{sessionData?.sessionUser?.userRole}
 				</Badge>
