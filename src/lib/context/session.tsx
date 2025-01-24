@@ -10,6 +10,8 @@ export const SessionContext = createContext<UseSessionRet>({
 	isLoading: true,
 	response: null,
 	setIsLoading: () => {},
+	isRoleAllowed: () => false,
+	isMe: () => false,
 })
 
 export function SessionProvider({

@@ -2,7 +2,6 @@
 
 import UserCard from "./user-card"
 import UserCardSkeleton from "@/components/skeletons/user-card-skeleton"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import useTeamIdContext from "@/lib/context/team-id"
@@ -30,18 +29,6 @@ export default function SearchUser() {
 		hasNextPage: (data) =>
 			!data || data.orgUsers.length === DEFAULT_PAGE_SIZE,
 	})
-	const {
-		InfiniteScrollWithDebouncing: InfiniteScrollWithDebouncingAll,
-		data: allUsersData,
-	} = usePaginatedAPI<GetUsersResponse>({
-		requestMethod: "GET",
-		requestUrl: "/orgs/me/users",
-		urlParams: {},
-		queryParams: {},
-		bodyParams: {},
-		hasNextPage: (data) =>
-			!data || data.orgUsers.length === DEFAULT_PAGE_SIZE,
-	})
 
 	const users = useMemo(
 		() =>
@@ -56,31 +43,17 @@ export default function SearchUser() {
 		[data, addedUsers],
 	)
 
-	const allUsers = useMemo(
-		() =>
-			allUsersData.reduce(
-				(acc, curr) =>
-					[...acc, ...curr.orgUsers].filter(
-						(user) =>
-							!addedUsers.find((u) => u.userId === user.userId),
-					),
-				[] as GetUsersResponse["orgUsers"],
-			),
-		[allUsersData, addedUsers],
-	)
-
 	return (
 		<div>
 			<div className="mb-4 flex space-x-2">
 				<Input
 					type="text"
-					placeholder="Search users..."
+					placeholder="Search users to add..."
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
-				<Button>Search</Button>
 			</div>
-			{searchTerm ? (
+			{searchTerm && (
 				<InfiniteScrollWithDebouncing
 					skeleton={Array.from({ length: 4 }).map((_, idx) => (
 						<UserCardSkeleton key={idx} />
@@ -91,17 +64,6 @@ export default function SearchUser() {
 						<UserCard key={user.userId} user={user} />
 					))}
 				</InfiniteScrollWithDebouncing>
-			) : (
-				<InfiniteScrollWithDebouncingAll
-					skeleton={Array.from({ length: 4 }).map((_, idx) => (
-						<UserCardSkeleton key={idx} />
-					))}
-					className="space-y-2"
-				>
-					{allUsers.map((user) => (
-						<UserCard key={user.userId} user={user} />
-					))}
-				</InfiniteScrollWithDebouncingAll>
 			)}
 		</div>
 	)

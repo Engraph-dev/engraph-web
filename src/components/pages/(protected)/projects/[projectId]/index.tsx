@@ -1,5 +1,9 @@
 "use client"
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Title from "@/components/ux/title"
+import useProjectIdContext from "@/lib/context/project-id"
+import { Handshake, Settings, Users } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const TeamInfo = dynamic(
@@ -21,11 +25,47 @@ const UserInfo = dynamic(
 )
 
 export default function ProjectIdPage() {
+	const { projectResponseData } = useProjectIdContext()
+	const data =
+		projectResponseData?.responseStatus === "SUCCESS"
+			? projectResponseData.projectData
+			: null
 	return (
 		<div className="space-y-6">
-			<ProjectInfo />
-			<TeamInfo />
-			<UserInfo />
+			<Title title={data?.projectName || "Loading Project..."} />
+			<Tabs defaultValue="teams">
+				<TabsList className="grid w-full grid-cols-3">
+					<TabsTrigger value="teams">
+						<span className="hidden md:block">Teams</span>
+						<span className="md:ml-2">
+							<Handshake size={16} />
+						</span>
+					</TabsTrigger>
+					<TabsTrigger value="users">
+						<span className="hidden md:block">Users</span>
+						<span className="md:ml-2">
+							<Users size={16} />
+						</span>
+					</TabsTrigger>
+					<TabsTrigger value="settings">
+						<span className="hidden md:block">
+							Project Settings
+						</span>
+						<span className="md:ml-2">
+							<Settings size={16} />
+						</span>
+					</TabsTrigger>
+				</TabsList>
+				<TabsContent value="teams">
+					<TeamInfo />
+				</TabsContent>
+				<TabsContent value="users">
+					<UserInfo />
+				</TabsContent>
+				<TabsContent value="settings">
+					<ProjectInfo />
+				</TabsContent>
+			</Tabs>
 		</div>
 	)
 }

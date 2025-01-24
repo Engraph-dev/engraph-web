@@ -82,3 +82,27 @@ body {
 		@apply bg-background text-foreground;
 	}
 }
+
+/* scroll-animations */
+
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+	@keyframes logo-scroll {
+		to {
+			padding-left: 56px;
+		}
+		from {
+			padding-left: 24px;
+		}
+	}
+
+	@keyframes logo-scale {
+		to {
+			scale: 0.8;
+			height: 40px;
+		}
+		from {
+			scale: 1;
+			height: 56px;
+		}
+	}
+}

@@ -41,9 +41,9 @@ export function UserDetails() {
 				<Badge
 					onClick={handleCopy}
 					variant="secondary"
-					className="hidden cursor-pointer rounded-full transition-all active:scale-95 md:block"
+					className="hidden cursor-pointer rounded-full bg-foreground/30 transition-all md:block"
 				>
-					{sessionData.orgId}
+					{sessionData?.sessionUser?.userRole}
 				</Badge>
 			) : (
 				<Skeleton className="hidden h-4 w-24 rounded-full md:block" />
