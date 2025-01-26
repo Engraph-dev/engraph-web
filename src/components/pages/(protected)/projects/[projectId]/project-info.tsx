@@ -30,7 +30,7 @@ import { camelCaseToNormal } from "@/lib/utils"
 import { ProjectType, UserRole } from "@prisma/client"
 import { Edit, Save } from "lucide-react"
 import { useParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 export default function ProjectInfo() {
@@ -45,6 +45,7 @@ export default function ProjectInfo() {
 		requestMethod: "PATCH",
 		formFields: {
 			bodyParams: {
+				projectBranch: "",
 				projectEntryPoint: "",
 				projectName: "",
 				projectType: ProjectType.typescript,
@@ -70,6 +71,7 @@ export default function ProjectInfo() {
 		"projectName",
 		"projectType",
 		"projectEntryPoint",
+		"projectBranch",
 	]
 	const {
 		registerField,
