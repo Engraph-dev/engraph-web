@@ -11,20 +11,22 @@ import { GetProjectParams } from "@/lib/defs/engraph-backend/orgs/me/projects/[p
 import {
 	GetProjectTeamsParams,
 	GetProjectTeamsResponse,
-	GetProjectUsersParams,
-	GetProjectUsersResponse,
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/teams"
 import {
 	UpdateProjectTeamBody,
 	UpdateProjectTeamParams,
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/teams/[teamId]"
 import {
+	GetProjectUsersParams,
+	GetProjectUsersResponse,
+} from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/users"
+import {
 	UpdateProjectUserBody,
 	UpdateProjectUserParams,
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/users/[userId]"
 import {
 	GetTeamsQuery,
-	GetTeamsResponse,
+	TeamsResponse,
 } from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { useAPIRequest } from "@/lib/hooks/useAPI"
 import {
@@ -47,7 +49,7 @@ export interface ProjectIdContext {
 		newLevel: AccessLevel,
 		isTeam: boolean,
 	) => void
-	orgTeams: Array<GetTeamsResponse["orgTeams"][number]>
+	orgTeams: Array<TeamsResponse["orgTeams"][number]>
 	newTeamId: string
 	setNewTeamId: React.Dispatch<React.SetStateAction<string>>
 	addTeam: () => void
@@ -183,7 +185,7 @@ export function ProjectIdProvider({
 	})
 
 	const { responseData: orgTeamsResponseData } = useAPIRequest<
-		GetTeamsResponse,
+		TeamsResponse,
 		NoParams,
 		NoParams,
 		GetTeamsQuery

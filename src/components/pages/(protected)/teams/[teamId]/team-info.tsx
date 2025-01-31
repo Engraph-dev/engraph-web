@@ -3,14 +3,17 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
 import { TextField } from "@/components/ui/custom-form"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import AuthorizationWrapper from "@/components/wrappers/authorization-wrappers"
-import { ResJSON } from "@/lib/defs/engraph-backend/common"
+import { makeAPIRequest } from "@/lib/api/helpers"
+import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import {
+	DeleteTeamParams,
 	GetTeamResponse,
 	UpdateTeamBody,
 	UpdateTeamParams,
@@ -19,8 +22,8 @@ import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { camelCaseToNormal } from "@/lib/utils"
 import { UserRole } from "@prisma/client"
 import { Edit, Save } from "lucide-react"
-import { useParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import React, { useState } from "react"
 import { toast } from "sonner"
 
 export default function TeamInfo({
@@ -29,6 +32,7 @@ export default function TeamInfo({
 	data: GetTeamResponse["teamData"]
 }) {
 	const { teamId } = useParams()
+	const router = useRouter()
 	const [isEditing, setIsEditing] = useState(false)
 	const updateTeamForm = useRequestForm<
 		ResJSON,
@@ -58,17 +62,33 @@ export default function TeamInfo({
 
 	type EditableKey = keyof (typeof updateTeamForm)["formValues"]["bodyParams"]
 	const IS_EDITABLE: EditableKey[] = ["teamName"]
+
 	const {
 		registerField,
 		formValues: { bodyParams },
 	} = updateTeamForm
+
 	function handleEditToggle() {
 		setIsEditing(!isEditing)
 		if (isEditing) {
 			updateTeamForm.submitForm()
 		}
 	}
-
+	async function deleteTeam() {
+		const resp = await makeAPIRequest<NoParams, DeleteTeamParams>({
+			bodyParams: {},
+			queryParams: {},
+			requestMethod: "DELETE",
+			requestUrl: "/orgs/me/teams/:teamId",
+			urlParams: { teamId: String(teamId) },
+		})
+		if (resp.responseData?.responseStatus === "SUCCESS") {
+			toast.success("Project deleted successfully")
+			router.push("/teams")
+		} else {
+			toast.error(JSON.stringify(resp))
+		}
+	}
 	return (
 		<Card>
 			<div className="flex flex-col justify-between md:flex-row">
@@ -120,6 +140,17 @@ export default function TeamInfo({
 					</TableBody>
 				</Table>
 			</CardContent>
+			<CardFooter>
+				<AuthorizationWrapper role={UserRole.Admin}>
+					<Button
+						className="w-full"
+						variant="destructive"
+						onClick={() => void deleteTeam()}
+					>
+						Delete Project
+					</Button>
+				</AuthorizationWrapper>
+			</CardFooter>
 		</Card>
 	)
 }

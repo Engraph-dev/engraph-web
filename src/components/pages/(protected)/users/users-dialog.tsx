@@ -71,6 +71,7 @@ export default function AddUserDialog() {
 		formValues: {
 			bodyParams: { userRole },
 		},
+		resetForm,
 	} = addUserForm
 
 	return (
@@ -85,7 +86,11 @@ export default function AddUserDialog() {
 				<DialogHeader>
 					<DialogTitle>Add User</DialogTitle>
 				</DialogHeader>
-				<form onSubmit={generateSubmitHandler()} className="space-y-4">
+				<form
+					onSubmit={generateSubmitHandler()}
+					onReset={resetForm}
+					className="space-y-4"
+				>
 					<TextField
 						form={addUserForm}
 						label="User Mail"

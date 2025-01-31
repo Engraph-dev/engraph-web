@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import AuthorizationWrapper from "@/components/wrappers/authorization-wrappers"
+import { NoParams } from "@/lib/defs/engraph-backend/common"
 import {
 	UpdateUserBody,
 	UpdateUserParams,
@@ -29,15 +30,15 @@ import { useParams } from "next/navigation"
 import React, { useState } from "react"
 import { toast } from "sonner"
 
-export default function UserInfo({ data }: { data: User }) {
+export default function UserInfo({ data, me }: { data: User; me?: boolean }) {
 	const { userId } = useParams()
 	const [isEditing, setIsEditing] = useState(false)
 	const updateUserForm = useRequestForm<
 		UpdateUserResponse,
-		UpdateUserParams,
+		UpdateUserParams | NoParams,
 		UpdateUserBody
 	>({
-		requestUrl: "/orgs/me/users/:teamId",
+		requestUrl: me ? "/orgs/me/users/me" : "/orgs/me/users/:userId",
 		requestMethod: "PATCH",
 		formFields: {
 			bodyParams: {
@@ -46,14 +47,26 @@ export default function UserInfo({ data }: { data: User }) {
 				userPassword: data.userPassword,
 				userRole: data.userRole,
 			},
-			urlParams: {
-				userId: String(userId),
-			},
+			urlParams: me
+				? {}
+				: {
+						userId: String(userId),
+					},
 			queryParams: {},
 		},
+		beforeRequest: (body) => ({
+			...body,
+			bodyParams: {
+				...body.bodyParams,
+				userPassword:
+					body.bodyParams.userPassword === data.userPassword
+						? undefined
+						: body.bodyParams.userPassword,
+			},
+		}),
 		responseHandlers: {
 			onSuccess: () => {
-				toast.success("Project updated successfully")
+				toast.success("User updated successfully")
 			},
 			onError: (data) => {
 				toast.error(JSON.stringify(data))
@@ -68,11 +81,13 @@ export default function UserInfo({ data }: { data: User }) {
 		"userRole",
 		"userPassword",
 	]
+
 	const {
 		registerField,
 		formValues: { bodyParams },
 		setFields,
 	} = updateUserForm
+
 	function handleEditToggle() {
 		setIsEditing(!isEditing)
 		if (isEditing) {
@@ -91,7 +106,7 @@ export default function UserInfo({ data }: { data: User }) {
 				</CardHeader>
 				<AuthorizationWrapper role={UserRole.Admin}>
 					<Button
-						className="mx-auto w-4/5 md:mx-0 md:mr-6 md:mt-6 md:w-fit"
+						className="mx-auto w-11/12 md:mx-0 md:mr-6 md:mt-6 md:w-fit"
 						onClick={handleEditToggle}
 					>
 						{isEditing ? <Save /> : <Edit />}
@@ -152,6 +167,16 @@ export default function UserInfo({ data }: { data: User }) {
 																key as EditableKey,
 																"BODY",
 															),
+															type:
+																(key as EditableKey) ===
+																"userPassword"
+																	? "password"
+																	: "text",
+															placeholder:
+																(key as EditableKey) ===
+																"userPassword"
+																	? "********"
+																	: "",
 														}}
 													/>
 												)
