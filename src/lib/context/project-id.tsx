@@ -26,7 +26,7 @@ import {
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/users/[userId]"
 import {
 	GetTeamsQuery,
-	TeamsResponse,
+	type TeamsResponse,
 } from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { useAPIRequest } from "@/lib/hooks/useAPI"
 import {

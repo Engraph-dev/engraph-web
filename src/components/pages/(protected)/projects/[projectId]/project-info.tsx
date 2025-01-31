@@ -49,10 +49,10 @@ export default function ProjectInfo() {
 		requestMethod: "PATCH",
 		formFields: {
 			bodyParams: {
+				projectBranch: "",
 				projectEntryPoint: "",
 				projectName: "",
 				projectType: ProjectType.typescript,
-				projectBranch: "",
 			},
 			urlParams: {
 				projectId: String(projectId),
@@ -75,6 +75,7 @@ export default function ProjectInfo() {
 		"projectName",
 		"projectType",
 		"projectEntryPoint",
+		"projectBranch",
 	]
 	const {
 		registerField,
