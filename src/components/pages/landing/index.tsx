@@ -53,7 +53,7 @@ export function Hero() {
 				<br />
 				AI-Powered README Generator
 			</h1>
-			<p className="px-0 text-xl md:px-48">
+			<p className="px-0 text-xl md:px-24 lg:px-48">
 				Our AI-powered tool generates clear, detailed README files by
 				scanning GitHub repositories. It automates documentation with
 				features, structure, and screenshots in seconds. Focus on coding

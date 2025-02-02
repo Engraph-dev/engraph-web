@@ -1,9 +1,10 @@
 "use client"
 
+import Workflows from "@/components/pages/(protected)/projects/[projectId]/workflows"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Title from "@/components/ux/title"
 import useProjectIdContext from "@/lib/context/project-id"
-import { Handshake, Settings, Users } from "lucide-react"
+import { Handshake, Settings, Users, Workflow } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const TeamInfo = dynamic(
@@ -33,8 +34,14 @@ export default function ProjectIdPage() {
 	return (
 		<div className="space-y-6">
 			<Title title={data?.projectName || "Loading Project..."} />
-			<Tabs defaultValue="teams">
-				<TabsList className="grid w-full grid-cols-3">
+			<Tabs defaultValue="workflows">
+				<TabsList className="grid w-full grid-cols-4">
+					<TabsTrigger value="workflows">
+						<span className="hidden md:block">Workflows</span>
+						<span className="md:ml-2">
+							<Workflow size={16} />
+						</span>
+					</TabsTrigger>
 					<TabsTrigger value="teams">
 						<span className="hidden md:block">Teams</span>
 						<span className="md:ml-2">
@@ -56,6 +63,9 @@ export default function ProjectIdPage() {
 						</span>
 					</TabsTrigger>
 				</TabsList>
+				<TabsContent value="workflows">
+					<Workflows />
+				</TabsContent>
 				<TabsContent value="teams">
 					<TeamInfo />
 				</TabsContent>

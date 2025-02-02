@@ -1,6 +1,7 @@
 "use client"
 
 import { makeAPIRequest } from "@/lib/api/helpers"
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { MiniUser } from "@/lib/defs/engraph-backend/common/users"
 import {
@@ -25,6 +26,14 @@ import {
 	UpdateProjectUserParams,
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/users/[userId]"
 import {
+	GetProjectWorkflowsParams,
+	GetProjectWorkflowsResponse,
+} from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/workflows"
+import {
+	GetWorkflowParams,
+	GetWorkflowResponse,
+} from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/workflows/[workflowId]"
+import {
 	GetTeamsQuery,
 	type TeamsResponse,
 } from "@/lib/defs/engraph-backend/orgs/me/teams"
@@ -36,33 +45,6 @@ import {
 import { AccessLevel } from "@prisma/client"
 import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
-
-export interface ProjectIdContext {
-	isProjectDataLoading: boolean
-	projectResponseData:
-		| ResJSON<ProjectResponse, ProjectId, NoParams, NoParams>
-		| undefined
-	ProjectTeamsInfiniteScrollWithDebouncing: UsePaginatedAPIRet["InfiniteScrollWithDebouncing"]
-	teamList: Array<GetProjectTeamsResponse["projectTeams"][number]>
-	handleAccessLevelChange: (
-		id: string,
-		newLevel: AccessLevel,
-		isTeam: boolean,
-	) => void
-	orgTeams: Array<TeamsResponse["orgTeams"][number]>
-	newTeamId: string
-	setNewTeamId: React.Dispatch<React.SetStateAction<string>>
-	addTeam: () => void
-	ProjectUsersInfiniteScrollWithDebouncing: UsePaginatedAPIRet["InfiniteScrollWithDebouncing"]
-	userList: Array<GetProjectUsersResponse["projectUsers"][number]>
-	addUser: (user: MiniUser) => void
-	removeTeam(id: string): void
-	removeUser(id: string): void
-}
-
-export const ProjectIdContext = React.createContext<
-	ProjectIdContext | undefined
->(undefined)
 
 async function changeAccessLevel({
 	id,
@@ -118,13 +100,8 @@ async function changeAccessLevel({
 		toast.error(JSON.stringify(response.responseData))
 	}
 }
-export function ProjectIdProvider({
-	children,
-	projectId,
-}: {
-	children: React.ReactNode
-	projectId: string
-}) {
+
+function useProjectIdData(projectId: string) {
 	const {
 		responseData: projectResponseData,
 		isLoading: isProjectDataLoading,
@@ -162,7 +139,7 @@ export function ProjectIdProvider({
 		urlParams: {
 			projectId,
 		},
-		hasNextPage: (res) => res?.projectTeams.length === 10,
+		hasNextPage: (res) => res?.projectTeams.length === DEFAULT_PAGE_SIZE,
 	})
 
 	const {
@@ -181,8 +158,24 @@ export function ProjectIdProvider({
 		urlParams: {
 			projectId,
 		},
-		hasNextPage: (res) => res?.projectUsers.length === 10,
+		hasNextPage: (res) => res?.projectUsers.length === DEFAULT_PAGE_SIZE,
 	})
+
+	const {
+		InfiniteScrollWithDebouncing:
+			ProjectWorkflowsInfiniteScrollWithDebouncing,
+		data: projectWorkflowsData,
+	} = usePaginatedAPI<GetProjectWorkflowsResponse, GetProjectWorkflowsParams>(
+		{
+			requestMethod: "GET",
+			requestUrl: "/orgs/me/projects/:projectId/workflows",
+			queryParams: {},
+			urlParams: { projectId },
+			bodyParams: {},
+			hasNextPage: (res) =>
+				res?.projectWorkflows.length === DEFAULT_PAGE_SIZE,
+		},
+	)
 
 	const { responseData: orgTeamsResponseData } = useAPIRequest<
 		TeamsResponse,
@@ -307,7 +300,7 @@ export function ProjectIdProvider({
 			? orgTeamsResponseData.orgTeams
 			: []
 
-	const value: ProjectIdContext = {
+	return {
 		isProjectDataLoading,
 		projectResponseData,
 		ProjectTeamsInfiniteScrollWithDebouncing,
@@ -322,8 +315,23 @@ export function ProjectIdProvider({
 		addUser,
 		removeTeam,
 		removeUser,
+		ProjectWorkflowsInfiniteScrollWithDebouncing,
+		projectWorkflowsData,
 	}
+}
 
+export const ProjectIdContext = React.createContext<
+	ReturnType<typeof useProjectIdData> | undefined
+>(undefined)
+
+export function ProjectIdProvider({
+	children,
+	projectId,
+}: {
+	children: React.ReactNode
+	projectId: string
+}) {
+	const value = useProjectIdData(projectId)
 	return (
 		<ProjectIdContext.Provider value={value}>
 			{children}

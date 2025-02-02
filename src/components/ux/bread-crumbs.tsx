@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 import React from "react"
 
+const IGNORE_CRUMBS = ["/workflows"]
+
 export default function NavbarBreadCrumb() {
 	const pathname = usePathname()
 	const path = pathname.split("/").filter(Boolean)
@@ -23,7 +25,11 @@ export default function NavbarBreadCrumb() {
 		new: "Create a new project",
 	}
 	function getPath(i: number): string {
-		return "/" + path.slice(0, i + 1).join("/")
+		const href = "/" + path.slice(0, i + 1).join("/")
+		const match = IGNORE_CRUMBS.find((c) => href.includes(c))
+		if (!match) return href
+		const index = href.indexOf(match)
+		return href.slice(0, index)
 	}
 	function isActive(i: number): boolean {
 		return getPath(i) === pathname
