@@ -10,17 +10,9 @@ import {
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/workflows/[workflowId]"
 import { useAPIRequest } from "@/lib/hooks/useAPI"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
+import { Message, Role } from "@/lib/types/graph"
 import { useParams } from "next/navigation"
 import React, { createContext, useCallback, useRef } from "react"
-
-export enum Role {
-	AI = "ai",
-	USER = "user",
-}
-interface Message {
-	role: Role
-	content: string
-}
 
 function useWorkflowIdData() {
 	const { projectId, workflowId } = useParams()
@@ -28,7 +20,7 @@ function useWorkflowIdData() {
 		{
 			role: Role.AI,
 			content:
-				"Hello! How can I assist you today? If you have any questions or need information about your company, competitors, or anything else, feel free to ask!",
+				"Hello! How can I assist you today? If you have any questions or need information about your project, feel free to ask!",
 		},
 	])
 
