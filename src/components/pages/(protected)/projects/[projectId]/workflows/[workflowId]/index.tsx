@@ -2,13 +2,13 @@
 
 import QueryForm from "@/components/pages/(protected)/projects/[projectId]/workflows/[workflowId]/form"
 import ProjectIdPageSkeleton from "@/components/skeletons/project-id-skeleton"
-import { Separator } from "@/components/ui/separator"
+import WorkflowSkeleton from "@/components/skeletons/workflow-skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import useWorkflowId from "@/lib/context/workflow-id"
+import { GitGraph, MessageCircle } from "lucide-react"
 import dynamic from "next/dynamic"
 import React from "react"
 
-// import ReactForceGraph from "@/components/pages/(protected)/projects/[projectId]/workflows/[workflowId]/react-force-graph"
-// const Neo4jGraph = dynamic(() => import("@/components/pages/(protected)/projects/[projectId]/workflows/[workflowId]/neo4j-graph"), { ssr: false })
 const ReactForceGraph = dynamic(
 	() =>
 		import(
@@ -21,13 +21,32 @@ export default function WorkflowIdPage() {
 	const { isLoading, workflowData } = useWorkflowId()
 
 	if (isLoading || workflowData?.responseStatus !== "SUCCESS") {
-		return <ProjectIdPageSkeleton />
+		return <WorkflowSkeleton />
 	}
 	return (
 		<div className="flex flex-col gap-4">
-			<ReactForceGraph workflowData={workflowData.workflowData as any} />
-			<Separator />
-			<QueryForm />
+			<Tabs defaultValue="visualize">
+				<TabsList className="grid w-full grid-cols-2">
+					<TabsTrigger value="visualize">
+						<span className="hidden md:block">Visualize</span>
+						<span className="md:ml-2">
+							<GitGraph size={16} />
+						</span>
+					</TabsTrigger>
+					<TabsTrigger value="query">
+						<span className="hidden md:block">Query</span>
+						<span className="md:ml-2">
+							<MessageCircle size={16} />
+						</span>
+					</TabsTrigger>
+				</TabsList>
+				<TabsContent value="visualize">
+					<ReactForceGraph workflowData={workflowData.workflowData} />
+				</TabsContent>
+				<TabsContent value="query">
+					<QueryForm workflowData={workflowData.workflowData} />
+				</TabsContent>
+			</Tabs>
 		</div>
 	)
 }

@@ -72,7 +72,7 @@ export function TextField<
 		<div
 			{...props.containerProps}
 			{...(useStyled
-				? { className: "relative " + props.label ? "space-y-1" : "" }
+				? { className: "relative " + props.label ? "space-y-1 " : "" }
 				: {})}
 		>
 			{renderLabel}

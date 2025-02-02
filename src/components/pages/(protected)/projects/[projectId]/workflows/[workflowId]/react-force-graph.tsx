@@ -1,13 +1,10 @@
 import { GetWorkflowResponse } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/workflows/[workflowId]"
+import { WorkflowIdComponentProps } from "@/lib/types/graph"
 import React, { memo } from "react"
 import ForceGraph2D from "react-force-graph-2d"
 
 export const ReactForceGraph = memo(
-	({
-		workflowData,
-	}: {
-		workflowData: GetWorkflowResponse["workflowData"]
-	}) => {
+	({ workflowData }: WorkflowIdComponentProps) => {
 		const moduleNodes = workflowData.moduleNodes.flat().map((node) => ({
 			id: node.elementId,
 			group: node.elementId,
@@ -44,7 +41,7 @@ export const ReactForceGraph = memo(
 			)
 
 		return (
-			<div className="~bg-black overflow-x-hidden rounded-lg border">
+			<div className="overflow-x-hidden rounded-lg border">
 				<ForceGraph2D
 					graphData={{
 						nodes: initialNodes,
@@ -92,6 +89,8 @@ export const ReactForceGraph = memo(
 					}}
 					linkWidth={(link) => link.width}
 					linkDirectionalArrowLength={5}
+					linkColor="rgba(255, 255, 255, 1)"
+					linkAutoColorBy="source"
 					linkCurvature={0.25}
 				/>
 			</div>

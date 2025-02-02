@@ -11,10 +11,34 @@ import {
 import { useAPIRequest } from "@/lib/hooks/useAPI"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { useParams } from "next/navigation"
-import React, { createContext } from "react"
+import React, { createContext, useCallback, useRef } from "react"
+
+export enum Role {
+	AI = "ai",
+	USER = "user",
+}
+interface Message {
+	role: Role
+	content: string
+}
 
 function useWorkflowIdData() {
 	const { projectId, workflowId } = useParams()
+	const messages = useRef<Message[]>([
+		{
+			role: Role.AI,
+			content:
+				"Hello! How can I assist you today? If you have any questions or need information about your company, competitors, or anything else, feel free to ask!",
+		},
+	])
+
+	function setMessages(newMessages: Message[]) {
+		messages.current = newMessages
+	}
+
+	const appendMessage = useCallback((message: Message) => {
+		setMessages([...messages.current, message])
+	}, [])
 	const [response, setResponse] =
 		React.useState<QueryWorkflowResponse | null>(null)
 
@@ -53,21 +77,36 @@ function useWorkflowIdData() {
 			onSuccess: (data) => {
 				resetForm()
 				setResponse(data)
-				setTimeout(() => {
-					const queryResponseDiv =
-						document.getElementById(QUERY_RESPONSE_ID)
-					if (queryResponseDiv) {
-						queryResponseDiv.scrollIntoView({
-							behavior: "smooth",
-							block: "start",
-						})
-					}
-				}, 500)
+				const aiMessageIndex = messages.current.length - 1
+				const updatedMessages = [...messages.current]
+				updatedMessages[aiMessageIndex] = {
+					role: Role.AI,
+					content: data.queryData.chatResponse,
+				}
+				setMessages(updatedMessages)
 			},
 		},
 	})
 
-	const { resetForm } = queryWorkflowForm
+	const {
+		resetForm,
+		formValues: {
+			bodyParams: { userQuery },
+		},
+		submitForm,
+	} = queryWorkflowForm
+
+	function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
+		e?.preventDefault()
+		const query = userQuery.trim()
+		if (!query) return
+
+		const userMessage: Message = { role: Role.USER, content: query }
+		appendMessage(userMessage)
+
+		appendMessage({ role: Role.AI, content: "" })
+		void submitForm()
+	}
 
 	return {
 		workflowData,
@@ -75,6 +114,8 @@ function useWorkflowIdData() {
 		queryWorkflowForm,
 		response,
 		setResponse,
+		handleSubmit,
+		messages: messages.current,
 	}
 }
 const WorkflowIdContext = createContext<

@@ -1,3 +1,4 @@
+import { GetWorkflowResponse } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]/workflows/[workflowId]"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -67,4 +68,41 @@ export function stringToRGBA(str: string, alpha = 1) {
 	const b = hash & 255
 
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+const pickRandomElems = <T>(arr: T[], n: number = 5) => {
+	const shuffled = arr.sort(() => 0.5 - Math.random())
+	return shuffled.slice(0, n)
+}
+
+const suggestionTemplates = [
+	"How is ${node} used?",
+	"What is the purpose of ${node}?",
+	"Where is ${node} used?",
+	"What is the definition of ${node}?",
+	"What does ${node} do?",
+]
+
+export function getSuggestions(
+	workflowData: GetWorkflowResponse["workflowData"],
+	n: number = 5,
+) {
+	console.log({ workflowData })
+	const symbols = workflowData.symbolNodes
+		.flat()
+		.map((node) => node?.properties?.symbolIdentifier)
+		.filter(Boolean)
+	const modules = workflowData.moduleNodes
+		.flat()
+		.map((node) => node?.properties?.modulePath)
+		.filter(Boolean)
+	const nodes = [...symbols, ...modules]
+	const pickedNodes = pickRandomElems(nodes, n)
+
+	const suggestions: string[] = pickedNodes.map((node, idx) => {
+		const suggestion = suggestionTemplates[idx % suggestionTemplates.length]
+		return suggestion.replace("${node}", node)
+	})
+
+	return suggestions
 }
