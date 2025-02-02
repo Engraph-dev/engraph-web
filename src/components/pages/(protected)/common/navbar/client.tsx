@@ -18,6 +18,7 @@ import { toast } from "sonner"
 
 export function UserDetails() {
 	const { sessionData } = useSessionContext()
+
 	function handleCopy() {
 		if (!sessionData?.orgId) return
 		navigator.clipboard.writeText(sessionData?.orgId)

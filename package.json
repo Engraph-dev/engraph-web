@@ -14,6 +14,8 @@
 		"prepare": "husky install"
 	},
 	"dependencies": {
+		"@dagrejs/dagre": "^1.1.4",
+		"@neo4j-nvl/react": "^0.3.6",
 		"@prisma/client": "^6.1.0",
 		"@radix-ui/react-avatar": "^1.1.2",
 		"@radix-ui/react-dialog": "^1.1.4",
@@ -26,6 +28,7 @@
 		"@radix-ui/react-separator": "^1.1.1",
 		"@radix-ui/react-slot": "^1.1.1",
 		"@radix-ui/react-tabs": "^1.1.2",
+		"@xyflow/react": "^12.4.2",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"cmdk": "^1.0.0",
@@ -36,6 +39,8 @@
 		"prisma": "^6.1.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
+		"react-force-graph-2d": "^1.27.0",
+		"react-remark": "^2.1.0",
 		"sonner": "^1.7.2",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7"

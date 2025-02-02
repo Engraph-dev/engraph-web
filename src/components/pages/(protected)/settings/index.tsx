@@ -45,6 +45,7 @@ export default function SettingsPage() {
 		<div className="space-y-6">
 			<h2 className="text-2xl font-bold">My Settings</h2>
 			<UserInfo
+				me={true}
 				data={{ ...sessionData?.sessionUser, userPassword: "testing" }}
 			/>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

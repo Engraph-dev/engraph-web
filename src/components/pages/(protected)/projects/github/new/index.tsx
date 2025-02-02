@@ -21,6 +21,7 @@ import {
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { Repositories } from "@/lib/types/github"
 import { ProjectSourceType, ProjectType } from "@prisma/client"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 const DISABLED_FIELDS: Record<ProjectType, (keyof CreateProjectBody)[]> = {
@@ -31,6 +32,7 @@ export default function NewGithubProjectPage({
 }: {
 	repositories: Repositories
 }) {
+	const router = useRouter()
 	const addProjectForm = useRequestForm<
 		ProjectResponse,
 		NoParams,
@@ -52,8 +54,9 @@ export default function NewGithubProjectPage({
 			urlParams: {},
 		},
 		responseHandlers: {
-			onSuccess: () => {
+			onSuccess: (data) => {
 				toast.success(`A new Project has been created!`)
+				router.push(`/projects/${data.projectData?.projectId}`)
 			},
 			onError: (data) => {
 				toast.error(data.message)
@@ -70,6 +73,7 @@ export default function NewGithubProjectPage({
 		formValues: {
 			bodyParams: { projectType, projectIdentifier },
 		},
+		resetForm,
 	} = addProjectForm
 	return (
 		<div>
@@ -81,7 +85,11 @@ export default function NewGithubProjectPage({
 					To add a new Project, import an existing Git Repository.
 				</p>
 			</div>
-			<form onSubmit={generateSubmitHandler()} className="space-y-4">
+			<form
+				onSubmit={generateSubmitHandler()}
+				onReset={resetForm}
+				className="space-y-4"
+			>
 				<div className="space-y-1">
 					<Label htmlFor="projectIdentifier">Project</Label>
 					<Combobox

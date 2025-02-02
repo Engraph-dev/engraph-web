@@ -16,11 +16,13 @@ import {
 } from "@/lib/defs/engraph-backend/orgs/me/teams"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { Plus } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
 export default function AddTeamDialog() {
 	const [isOpen, setIsOpen] = useState(false)
+	const router = useRouter()
 
 	const addTeamForm = useRequestForm<
 		CreateTeamResponse,
@@ -40,6 +42,7 @@ export default function AddTeamDialog() {
 		responseHandlers: {
 			onSuccess: (data) => {
 				toast.success(`${data.teamData?.teamName} has been created!`)
+				router.push(`/teams/${data.teamData?.teamId}`)
 			},
 			onError: (data) => {
 				toast.error(data.message)
@@ -49,7 +52,7 @@ export default function AddTeamDialog() {
 			},
 		},
 	})
-	const { registerField, generateSubmitHandler } = addTeamForm
+	const { registerField, generateSubmitHandler, resetForm } = addTeamForm
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -63,7 +66,11 @@ export default function AddTeamDialog() {
 				<DialogHeader>
 					<DialogTitle>Add Team</DialogTitle>
 				</DialogHeader>
-				<form onSubmit={generateSubmitHandler()} className="space-y-4">
+				<form
+					onSubmit={generateSubmitHandler()}
+					onReset={resetForm}
+					className="space-y-4"
+				>
 					<TextField
 						form={addTeamForm}
 						label="Team Name"

@@ -4,6 +4,7 @@ import { LOCAL_AUTH_SESSION } from "@/lib/config/api"
 import { type NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import { GetSessionResponse } from "@/lib/defs/engraph-backend/orgs/me/sessions/me"
 import { UserRole } from "@prisma/client"
+import { usePathname } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 
 export type UseSessionRet = {
@@ -25,6 +26,8 @@ export type UseSessionRet = {
 export function useSession(): UseSessionRet {
 	const [response, setResponse] = useState<UseSessionRet["response"]>(null)
 	const [isLoading, setIsLoading] = useState(true)
+
+	const pathname = usePathname()
 
 	const getSession = useCallback(async () => {
 		setIsLoading(true)
@@ -94,7 +97,7 @@ export function useSession(): UseSessionRet {
 
 	useEffect(() => {
 		refreshSession()
-	}, [refreshSession])
+	}, [refreshSession, pathname])
 
 	const sessionData =
 		response?.responseData?.responseStatus === "SUCCESS"

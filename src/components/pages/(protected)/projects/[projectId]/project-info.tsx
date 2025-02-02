@@ -4,6 +4,7 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
@@ -19,9 +20,11 @@ import {
 } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import AuthorizationWrapper from "@/components/wrappers/authorization-wrappers"
+import { makeAPIRequest } from "@/lib/api/helpers"
 import useProjectIdContext from "@/lib/context/project-id"
-import { ResJSON } from "@/lib/defs/engraph-backend/common"
+import { NoParams, ResJSON } from "@/lib/defs/engraph-backend/common"
 import {
+	DeleteProjectParams,
 	UpdateProjectBody,
 	UpdateProjectParams,
 } from "@/lib/defs/engraph-backend/orgs/me/projects/[projectId]"
@@ -29,12 +32,13 @@ import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { camelCaseToNormal } from "@/lib/utils"
 import { ProjectType, UserRole } from "@prisma/client"
 import { Edit, Save } from "lucide-react"
-import { useParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 export default function ProjectInfo() {
 	const { projectId } = useParams()
+	const router = useRouter()
 	const [isEditing, setIsEditing] = useState(false)
 	const updateProjectForm = useRequestForm<
 		ResJSON,
@@ -103,6 +107,22 @@ export default function ProjectInfo() {
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectData])
+
+	async function deleteProject() {
+		const resp = await makeAPIRequest<NoParams, DeleteProjectParams>({
+			bodyParams: {},
+			queryParams: {},
+			requestMethod: "DELETE",
+			requestUrl: "/orgs/me/projects/:projectId",
+			urlParams: { projectId: String(projectId) },
+		})
+		if (resp.responseData?.responseStatus === "SUCCESS") {
+			toast.success("Project deleted successfully")
+			router.push("/projects")
+		} else {
+			toast.error(JSON.stringify(resp))
+		}
+	}
 
 	if (!projectData) {
 		return <ProjectIdPageSkeleton />
@@ -201,6 +221,17 @@ export default function ProjectInfo() {
 					</TableBody>
 				</Table>
 			</CardContent>
+			<CardFooter>
+				<AuthorizationWrapper role={UserRole.Admin}>
+					<Button
+						className="w-full"
+						variant="destructive"
+						onClick={() => void deleteProject()}
+					>
+						Delete Project
+					</Button>
+				</AuthorizationWrapper>
+			</CardFooter>
 		</Card>
 	)
 }
