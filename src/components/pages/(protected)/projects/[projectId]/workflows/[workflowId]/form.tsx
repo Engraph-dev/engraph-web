@@ -1,42 +1,31 @@
 import { Button } from "@/components/ui/button"
 import { TextField } from "@/components/ui/custom-form"
 import Spinner from "@/components/ui/spinner"
+import Remark from "@/components/ux/remark"
 import { QUERY_RESPONSE_ID } from "@/lib/constants/workflow"
 import useWorkflowId from "@/lib/context/workflow-id"
-import { convertMarkdownToHtml } from "@/lib/utils"
-import React, { useEffect } from "react"
+import React from "react"
 
 export default function QueryForm() {
-	const { queryWorkflowForm, response, setResponse } = useWorkflowId()
-	const {
-		registerField,
-		generateSubmitHandler,
-		resetForm,
-		setLoading,
-		isLoading,
-	} = queryWorkflowForm
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		setLoading(true)
-		setResponse(null)
-		generateSubmitHandler()(e)
-		resetForm()
-	}
-
-	useEffect(() => {
-		if (response) {
-			setLoading(false)
-		}
-	}, [response, setLoading])
+	const { queryWorkflowForm, response } = useWorkflowId()
+	const { registerField, generateSubmitHandler, submitForm, isLoading } =
+		queryWorkflowForm
 
 	return (
 		<div className="mt-4">
 			<h2 className="text-3xl font-semibold">Query the Graph</h2>
-			<form onSubmit={handleSubmit} className="space-y-4">
+			<form onSubmit={generateSubmitHandler()} className="mt-4 space-y-4">
 				<TextField
 					form={queryWorkflowForm}
-					label="Query"
+					label={null}
 					inputProps={{
 						...registerField("userQuery", "BODY"),
+						onKeyDown: (e) => {
+							if (e.key === "Enter" && !e.shiftKey) {
+								e.preventDefault()
+								void submitForm()
+							}
+						},
 						placeholder:
 							"How are commands in src/utils/commands.ts used?",
 					}}
@@ -48,12 +37,8 @@ export default function QueryForm() {
 					{!isLoading && response && (
 						<>
 							<h3>Response:</h3>
-							<div
-								dangerouslySetInnerHTML={{
-									__html: convertMarkdownToHtml(
-										response.queryData.chatResponse,
-									),
-								}}
+							<Remark
+								markdown={response.queryData.chatResponse}
 							/>
 						</>
 					)}

@@ -51,6 +51,7 @@ function useWorkflowIdData() {
 		},
 		responseHandlers: {
 			onSuccess: (data) => {
+				resetForm()
 				setResponse(data)
 				setTimeout(() => {
 					const queryResponseDiv =
@@ -65,6 +66,8 @@ function useWorkflowIdData() {
 			},
 		},
 	})
+
+	const { resetForm } = queryWorkflowForm
 
 	return {
 		workflowData,

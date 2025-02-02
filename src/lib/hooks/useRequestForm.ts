@@ -241,6 +241,8 @@ export function useRequestForm<
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isDirty, setIsDirty] = useState<boolean>(false)
 
+	console.log({ isFormLoading: isLoading })
+
 	const resetForm = () => {
 		setIsLoading(false)
 		setIsDirty(false)
