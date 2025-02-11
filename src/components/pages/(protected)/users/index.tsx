@@ -6,6 +6,7 @@ import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
 import { GetUsersResponse } from "@/lib/defs/engraph-backend/orgs/me/users"
 import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
+import Link from "next/link"
 import { useMemo } from "react"
 
 export default function UsersSection() {
@@ -42,15 +43,17 @@ export default function UsersSection() {
 			</div>
 			<InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{userList.map((user) => (
-					<Card key={user.userId}>
-						<CardHeader>
-							<CardTitle>{`${user.userFirstName} ${user.userLastName}`}</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<p>Email: {user.userMail}</p>
-							<p>Role: {user.userRole}</p>
-						</CardContent>
-					</Card>
+					<Link key={user.userId} href={`/users/${user.userId}`}>
+						<Card>
+							<CardHeader>
+								<CardTitle>{`${user.userFirstName} ${user.userLastName}`}</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<p>Email: {user.userMail}</p>
+								<p>Role: {user.userRole}</p>
+							</CardContent>
+						</Card>
+					</Link>
 				))}
 				{!userList.length && !isLoading && (
 					<div className="col-span-full row-span-full flex items-center justify-center py-24">

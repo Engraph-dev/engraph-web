@@ -20,7 +20,12 @@ export default function AuthLock({ children }: { children: React.ReactNode }) {
 		if (sessionData && isPublic) {
 			router.replace("/projects")
 		}
-	}, [isLoading, sessionData, pathname, router, isPublic])
+	}, [isLoading, sessionData, router, isPublic])
+
+	useEffect(() => {
+		if (!window) return
+		window.scrollTo(0, 0)
+	}, [pathname])
 
 	return <>{children}</>
 }

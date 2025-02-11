@@ -1,12 +1,12 @@
 "use client"
 
-import AddProjectDialog from "@/components/pages/(protected)/projects/projects-dialog"
-import { Button } from "@/components/ui/button"
+import ProjectSourceSelector from "@/components/pages/(protected)/projects/source-selector"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/pagination"
 import { NoParams } from "@/lib/defs/engraph-backend/common"
 import { GetProjectsResponse } from "@/lib/defs/engraph-backend/orgs/me/projects"
 import { usePaginatedAPI } from "@/lib/hooks/usePaginatedAPI"
+import Link from "next/link"
 import { useMemo } from "react"
 
 export default function ProjectsSection() {
@@ -36,19 +36,24 @@ export default function ProjectsSection() {
 		<div>
 			<div className="mb-4 flex items-center justify-between">
 				<h2 className="text-2xl font-bold">Projects</h2>
-				<AddProjectDialog />
+				<ProjectSourceSelector />
 			</div>
 			<InfiniteScrollWithDebouncing className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{projectsList.map((project) => (
-					<Card key={project.projectId}>
-						<CardHeader>
-							<CardTitle>{project.projectName}</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<p>Type: {project.projectType}</p>
-							<p>Source: {project.projectSourceType}</p>
-						</CardContent>
-					</Card>
+					<Link
+						href={`/projects/${project.projectId}`}
+						key={project.projectId}
+					>
+						<Card>
+							<CardHeader>
+								<CardTitle>{project.projectName}</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<p>Type: {project.projectType}</p>
+								<p>Source: {project.projectSourceType}</p>
+							</CardContent>
+						</Card>
+					</Link>
 				))}
 				{!projectsList.length && !isLoading && (
 					<div className="col-span-full row-span-full flex items-center justify-center py-24">

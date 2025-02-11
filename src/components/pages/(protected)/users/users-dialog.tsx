@@ -71,20 +71,26 @@ export default function AddUserDialog() {
 		formValues: {
 			bodyParams: { userRole },
 		},
+		resetForm,
 	} = addUserForm
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button>
-					<Plus className="mr-2 h-4 w-4" /> Add User
+					Add User
+					<Plus className="ml-2 h-4 w-4" />
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle>Add User</DialogTitle>
 				</DialogHeader>
-				<form onSubmit={generateSubmitHandler()} className="space-y-4">
+				<form
+					onSubmit={generateSubmitHandler()}
+					onReset={resetForm}
+					className="space-y-4"
+				>
 					<TextField
 						form={addUserForm}
 						label="User Mail"
