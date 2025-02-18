@@ -55,7 +55,7 @@ export default function LoginForm({ orgId }: { orgId: string }) {
 	return (
 		<form
 			onSubmit={generateSubmitHandler()}
-			className="mx-auto max-w-3xl space-y-8 py-10"
+			className="w-full space-y-8 py-10"
 		>
 			<TextField
 				form={loginCredentialsForm}

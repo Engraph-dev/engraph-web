@@ -35,7 +35,7 @@ export default function UpperNavbar() {
 							Docs
 						</Button>
 						<Separator orientation="vertical" className="h-6" />
-						<ModeToggle />
+						{/* <ModeToggle /> */}
 						<Account />
 					</div>
 					<Account className="block lg:hidden" />

@@ -37,7 +37,7 @@ export default function ProjectIdPage() {
 			<Tabs defaultValue="workflows">
 				<TabsList className="grid w-full grid-cols-4">
 					<TabsTrigger value="workflows">
-						<span className="hidden md:block">Workflows</span>
+						<span className="hidden md:block">Commits</span>
 						<span className="md:ml-2">
 							<Workflow size={16} />
 						</span>
