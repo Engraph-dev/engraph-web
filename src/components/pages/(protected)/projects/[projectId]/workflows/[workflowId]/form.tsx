@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button"
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { TextField } from "@/components/ui/custom-form"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import Remark from "@/components/ux/remark"
@@ -13,14 +7,14 @@ import useWorkflowId from "@/lib/context/workflow-id"
 import { Role, WorkflowIdComponentProps } from "@/lib/types/graph"
 import { getSuggestions } from "@/lib/utils"
 import { Send } from "lucide-react"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 
 export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
-	const { queryWorkflowForm, handleSubmit, messages } = useWorkflowId()
+	const { queryWorkflowForm, handleSubmit, messages, handleSuggestion } =
+		useWorkflowId()
 	const {
 		registerField,
 		isLoading,
-		setFields,
 		formValues: {
 			bodyParams: { userQuery },
 		},
@@ -36,9 +30,11 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 		})
 	}, [isLoading])
 
-	const suggestions = getSuggestions(workflowData)
-
-	console.log({ suggestions })
+	const suggestions = useMemo(
+		() => getSuggestions(workflowData),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[messages, workflowData],
+	)
 
 	useEffect(() => {
 		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })
@@ -46,11 +42,11 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle> Query the Graph</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<ScrollArea ref={divRef} className="h-[60vh] pr-4 *:*:!block">
+			<CardContent className="pt-6">
+				<ScrollArea
+					ref={divRef}
+					className="min-h-[60vh] pr-4 *:*:!block"
+				>
 					{messages.map((message, index) => (
 						<div key={index} className="mb-4 text-background">
 							{message.role === Role.AI ? (
@@ -77,21 +73,17 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 				>
 					<ScrollArea className="flex w-full pb-2 *:*:!flex *:*:gap-2">
 						<ScrollBar className="h-2" orientation="horizontal" />
-						{suggestions.map((suggestion, index) => (
-							<Button
-								disabled={isLoading}
-								key={index}
-								type="submit"
-								onClick={() =>
-									setFields({
-										bodyParams: { userQuery: suggestion },
-									})
-								}
-								variant="outline"
-							>
-								{suggestion}
-							</Button>
-						))}
+						{!isLoading &&
+							suggestions.map((suggestion, index) => (
+								<Button
+									disabled={isLoading}
+									key={index}
+									onClick={() => handleSuggestion(suggestion)}
+									variant="outline"
+								>
+									{suggestion}
+								</Button>
+							))}
 					</ScrollArea>
 					<div className="flex w-full space-x-2">
 						<TextField
@@ -114,6 +106,7 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 									"flex-grow px-3 py-2 text-sm border rounded-md w-full",
 								placeholder:
 									"How are commands in src/utils/commands.ts used?",
+								disabled: isLoading,
 							}}
 						/>
 						<Button disabled={!isValid} type="submit">
