@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import {
 	FeatureCardProps,
 	StepCardProps,
@@ -10,27 +10,27 @@ import {
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
-function NavLink({ title, href }: TNavLink, index: number) {
-	return (
-		<Link
-			key={`navlink-${index}`}
-			href={href}
-			className={cn(
-				"px-4 py-4 font-medium",
-				index === 0 && "pl-8",
-				index === navLinks.length - 1 && "pr-8",
-			)}
-		>
-			{title}
-		</Link>
-	)
-}
+// function NavLink({ title, href }: TNavLink, index: number) {
+// 	return (
+// 		<Link
+// 			key={`navlink-${index}`}
+// 			href={href}
+// 			className={cn(
+// 				"px-4 py-4 font-medium",
+// 				index === 0 && "pl-8",
+// 				index === navLinks.length - 1 && "pr-8",
+// 			)}
+// 		>
+// 			{title}
+// 		</Link>
+// 	)
+// }
 export function Navbar() {
 	return (
 		<div className="flex items-center justify-between px-6 py-4 md:px-24 md:py-12">
 			<div>{/* logo */}</div>
 			<nav className="hidden rounded-full bg-c1/50 bg-opacity-10 bg-clip-padding backdrop-blur-sm backdrop-filter md:flex">
-				{navLinks.map(NavLink)}
+				{/* {navLinks.map(NavLink)} */}
 			</nav>
 			<Link
 				href="/user/login"
@@ -51,13 +51,13 @@ export function Hero() {
 			<h1 className="text-5xl font-extrabold md:text-8xl">
 				From Code to Clarity
 				<br />
-				AI-Powered README Generator
+				AI-Powered documentation Generator
 			</h1>
 			<p className="px-0 text-xl md:px-24 lg:px-48">
-				Our AI-powered tool generates clear, detailed README files by
-				scanning GitHub repositories. It automates documentation with
-				features, structure, and screenshots in seconds. Focus on coding
-				while we handle the rest.
+				Our AI-powered tool generates clear, detailed documentation of
+				files by scanning GitHub repositories. It automates
+				documentation with features and structure in seconds. Focus on
+				coding while we handle the rest.
 			</p>
 			<Link
 				href="/org/create"

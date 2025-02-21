@@ -140,14 +140,14 @@ export default function TeamInfo({
 					</TableBody>
 				</Table>
 			</CardContent>
-			<CardFooter>
+			<CardFooter className="flex justify-end">
 				<AuthorizationWrapper role={UserRole.Admin}>
 					<Button
-						className="w-full"
+						className="w-fit"
 						variant="destructive"
 						onClick={() => void deleteTeam()}
 					>
-						Delete Project
+						Delete Team
 					</Button>
 				</AuthorizationWrapper>
 			</CardFooter>

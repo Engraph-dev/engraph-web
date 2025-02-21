@@ -100,6 +100,17 @@ function useWorkflowIdData() {
 		void submitForm()
 	}
 
+	function handleSuggestion(suggestion: string) {
+		const query = suggestion.trim()
+		if (!query) return
+
+		const userMessage: Message = { role: Role.USER, content: query }
+		appendMessage(userMessage)
+
+		appendMessage({ role: Role.AI, content: "" })
+		void submitForm({ bodyParams: { userQuery: query } })
+	}
+
 	return {
 		workflowData,
 		isLoading,
@@ -107,6 +118,7 @@ function useWorkflowIdData() {
 		response,
 		setResponse,
 		handleSubmit,
+		handleSuggestion,
 		messages: messages.current,
 	}
 }

@@ -40,7 +40,7 @@ export default function TeamViewPage({ teamId }: { teamId: string }) {
 						</span>
 					</TabsTrigger>
 					<TabsTrigger value="settings">
-						Project Settings
+						Team Settings
 						<span className="ml-2">
 							<Settings size={16} />
 						</span>

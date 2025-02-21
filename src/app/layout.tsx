@@ -21,17 +21,17 @@ export default function RootLayout({
 }>) {
 	return (
 		<html suppressHydrationWarning lang="en">
-			<body className={`${font.className} min-h-svh antialiased`}>
+			<body className={`${font.className} dark min-h-svh antialiased`}>
 				<SessionProvider>
-					<ThemeProvider
+					{/* <ThemeProvider
 						attribute="class"
 						defaultTheme="dark"
-						enableSystem
+						// enableSystem
 						disableTransitionOnChange
-					>
-						<main>{children}</main>
-						<Toaster />
-					</ThemeProvider>
+					> */}
+					<main>{children}</main>
+					<Toaster />
+					{/* </ThemeProvider> */}
 				</SessionProvider>
 			</body>
 		</html>

@@ -16,7 +16,7 @@ export function SubNavbar() {
 	const pathname = usePathname()
 
 	return (
-		<div className="sticky top-0 border-b border-border/40 bg-foreground/5 backdrop-blur-md">
+		<div className="sticky top-0 z-40 border-b border-border/40 bg-foreground/5 backdrop-blur-md *:container *:mx-auto *:max-w-screen-2xl">
 			<ScrollArea>
 				<ScrollBar orientation="horizontal" className="invisible" />
 				<nav className="flex h-10 animate-[logo-scroll_linear_forwards] items-center space-x-4 px-4 [animation-range:0px_56px] [animation-timeline:scroll(root)] md:px-6">
