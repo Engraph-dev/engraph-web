@@ -5,22 +5,27 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import Remark from "@/components/ux/remark"
 import useWorkflowId from "@/lib/context/workflow-id"
 import { Role, WorkflowIdComponentProps } from "@/lib/types/graph"
-import { getSuggestions } from "@/lib/utils"
+import { cn, getSuggestions } from "@/lib/utils"
 import { Send } from "lucide-react"
-import React, { useEffect, useMemo, useRef } from "react"
+import React, { useCallback, useEffect, useMemo, useRef } from "react"
 
 export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
-	const { queryWorkflowForm, handleSubmit, messages, handleSuggestion } =
-		useWorkflowId()
+	const {
+		queryWorkflowForm,
+		handleSubmit,
+		messages,
+		handleSuggestion,
+		streamedMessage,
+		isMessageLoading,
+	} = useWorkflowId()
 	const {
 		registerField,
-		isLoading,
 		formValues: {
 			bodyParams: { userQuery },
 		},
 	} = queryWorkflowForm
 
-	const isValid = userQuery.trim().length > 0
+	const isValid = userQuery.trim().length > 0 && !isMessageLoading
 	const divRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
@@ -28,12 +33,27 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 			top: divRef.current?.scrollHeight,
 			behavior: "smooth",
 		})
-	}, [isLoading])
+	}, [isMessageLoading])
 
 	const suggestions = useMemo(
 		() => getSuggestions(workflowData),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[messages, workflowData],
+	)
+
+	const getMessage = useCallback(
+		(idx: number) => {
+			if (
+				messages[idx].role === Role.AI &&
+				idx === messages.length - 1 &&
+				streamedMessage
+			) {
+				return streamedMessage
+			}
+
+			return messages[idx].content || "### Thinking..."
+		},
+		[messages, streamedMessage],
 	)
 
 	useEffect(() => {
@@ -49,19 +69,16 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 				>
 					{messages.map((message, index) => (
 						<div key={index} className="mb-4 text-background">
-							{message.role === Role.AI ? (
-								<div className="max-w-4/5 w-4/5 justify-self-start rounded-lg bg-foreground p-3">
-									<Remark
-										markdown={
-											message.content || "### Thinking..."
-										}
-									/>
-								</div>
-							) : (
-								<div className="max-w-4/5 w-4/5 justify-self-end rounded-lg bg-foreground p-3">
-									{message.content}
-								</div>
-							)}
+							<div
+								className={cn(
+									"max-w-4/5 w-4/5 overflow-x-auto rounded-lg bg-foreground p-3",
+									message.role === Role.AI
+										? "justify-self-start"
+										: "justify-self-end",
+								)}
+							>
+								<Remark markdown={getMessage(index)} />
+							</div>
 						</div>
 					))}
 				</ScrollArea>
@@ -73,10 +90,10 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 				>
 					<ScrollArea className="flex w-full pb-2 *:*:!flex *:*:gap-2">
 						<ScrollBar className="h-2" orientation="horizontal" />
-						{!isLoading &&
+						{!isMessageLoading &&
 							suggestions.map((suggestion, index) => (
 								<Button
-									disabled={isLoading}
+									disabled={isMessageLoading}
 									key={index}
 									onClick={() => handleSuggestion(suggestion)}
 									variant="outline"
@@ -106,7 +123,7 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 									"flex-grow px-3 py-2 text-sm border rounded-md w-full",
 								placeholder:
 									"How are commands in src/utils/commands.ts used?",
-								disabled: isLoading,
+								disabled: isMessageLoading,
 							}}
 						/>
 						<Button disabled={!isValid} type="submit">

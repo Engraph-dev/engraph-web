@@ -18,6 +18,7 @@ export type MakeAPIRequestArgs<
 	bodyParams: BodyT
 	queryParams: QueryT
 	customHeaders?: Headers
+	onlyResponse?: boolean
 }
 
 export type MakeAPIRequestRet<
@@ -32,6 +33,7 @@ export type MakeAPIRequestRet<
 			statusCode: StatusCode
 			responseData: ResponseJSON<ResponseT, ParamsT, BodyT, QueryT>
 			errorData: undefined
+			response?: Response
 	  }
 	| {
 			hasResponse: false
@@ -39,6 +41,7 @@ export type MakeAPIRequestRet<
 			statusCode: StatusCode
 			responseData: undefined
 			errorData: Error
+			response?: Response
 	  }
 
 export async function makeAPIRequest<
@@ -59,6 +62,7 @@ export async function makeAPIRequest<
 		queryParams,
 		bodyParams,
 		customHeaders = new Headers(),
+		onlyResponse,
 	} = args
 
 	let resolvedUrl = requestUrl
@@ -86,7 +90,7 @@ export async function makeAPIRequest<
 		// if (!sessionToken) {
 		const cookies = document.cookie.split(";")
 		const authCookie = cookies.find((c) =>
-			c.trim().startsWith("x-engaze-auth-local="),
+			c.trim().startsWith(LOCAL_AUTH_SESSION),
 		)
 		if (authCookie) {
 			sessionToken = authCookie.split("=")[1].trim()
@@ -132,6 +136,22 @@ export async function makeAPIRequest<
 				statusCode: statusCode,
 				responseData: undefined,
 				errorData: new Error(JSON.stringify(fetchResponse)),
+			}
+		}
+
+		if (onlyResponse) {
+			return {
+				responseData: {} as ResponseJSON<
+					ResponseT,
+					ParamsT,
+					BodyT,
+					QueryT
+				>,
+				hasResponse: true,
+				hasError: false,
+				statusCode: statusCode,
+				errorData: undefined,
+				response: fetchResponse,
 			}
 		}
 
