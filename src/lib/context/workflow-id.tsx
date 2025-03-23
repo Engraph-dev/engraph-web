@@ -1,5 +1,6 @@
 "use client"
 
+import { makeAPIRequest } from "@/lib/api/helpers"
 import { QUERY_RESPONSE_ID } from "@/lib/constants/workflow"
 import {
 	GetWorkflowParams,
@@ -12,25 +13,28 @@ import { useAPIRequest } from "@/lib/hooks/useAPI"
 import { useRequestForm } from "@/lib/hooks/useRequestForm"
 import { Message, Role } from "@/lib/types/graph"
 import { useParams } from "next/navigation"
-import React, { createContext, useCallback, useRef } from "react"
+import React, { createContext, useCallback, useMemo, useState } from "react"
 
 function useWorkflowIdData() {
 	const { projectId, workflowId } = useParams()
-	const messages = useRef<Message[]>([
+	const [messages, setMessages] = useState<Message[]>([
 		{
 			role: Role.AI,
 			content:
 				"Hello! How can I assist you today? If you have any questions or need information about your project, feel free to ask!",
 		},
 	])
+	const [streamedMessage, setStreamedMessage] = useState("")
 
-	function setMessages(newMessages: Message[]) {
-		messages.current = newMessages
-	}
+	const isMessageLoading = useMemo(
+		() => !!streamedMessage || !messages[messages.length - 1].content,
+		[streamedMessage, messages],
+	)
 
 	const appendMessage = useCallback((message: Message) => {
-		setMessages([...messages.current, message])
+		setMessages((prev) => [...prev, message])
 	}, [])
+
 	const [response, setResponse] =
 		React.useState<QueryWorkflowResponse | null>(null)
 
@@ -66,16 +70,8 @@ function useWorkflowIdData() {
 			queryParams: {},
 		},
 		responseHandlers: {
-			onSuccess: (data) => {
+			onSuccess: () => {
 				resetForm()
-				setResponse(data)
-				const aiMessageIndex = messages.current.length - 1
-				const updatedMessages = [...messages.current]
-				updatedMessages[aiMessageIndex] = {
-					role: Role.AI,
-					content: data.queryData.chatResponse,
-				}
-				setMessages(updatedMessages)
 			},
 		},
 	})
@@ -85,30 +81,73 @@ function useWorkflowIdData() {
 		formValues: {
 			bodyParams: { userQuery },
 		},
-		submitForm,
 	} = queryWorkflowForm
+
+	const fetchStream = async (query: string) => {
+		const userQuery = query.trim()
+		if (isMessageLoading || !query) return
+		const userMessage: Message = { role: Role.USER, content: userQuery }
+		appendMessage(userMessage)
+
+		appendMessage({ role: Role.AI, content: "" })
+
+		setStreamedMessage("")
+		const { response } = await makeAPIRequest({
+			requestMethod: "POST",
+			requestUrl: "/orgs/me/projects/:projectId/workflows/:workflowId",
+			bodyParams: {
+				userQuery,
+			},
+			urlParams: {
+				projectId: String(projectId),
+				workflowId: String(workflowId),
+			},
+			queryParams: {},
+			onlyResponse: true,
+			customHeaders: new Headers({
+				"Content-Type": "text/plain",
+			}),
+		})
+
+		if (response) {
+			if (response.status !== 200) {
+				setMessages((prev) => {
+					const updatedMessages = [...prev]
+					updatedMessages[updatedMessages.length - 1].content =
+						"I'm sorry, I couldn't find the information you requested. Please try again."
+					return updatedMessages
+				})
+			}
+			if (!response.body) return
+			const reader = response.body.getReader()
+			const decoder = new TextDecoder("utf-8")
+			let accumulated = ""
+			while (true) {
+				await new Promise((resolve) => setTimeout(resolve, 100))
+				const { done, value } = await reader.read()
+				if (done) break
+
+				const chunk = decoder.decode(value, { stream: true })
+				accumulated += chunk
+				setStreamedMessage((prev) => prev + chunk)
+			}
+			setMessages((prev) => {
+				const updatedMessages = [...prev]
+				updatedMessages[updatedMessages.length - 1].content =
+					accumulated
+				return updatedMessages
+			})
+			setStreamedMessage("")
+		}
+	}
 
 	function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
 		e?.preventDefault()
-		const query = userQuery.trim()
-		if (!query) return
-
-		const userMessage: Message = { role: Role.USER, content: query }
-		appendMessage(userMessage)
-
-		appendMessage({ role: Role.AI, content: "" })
-		void submitForm()
+		void fetchStream(userQuery)
 	}
 
 	function handleSuggestion(suggestion: string) {
-		const query = suggestion.trim()
-		if (!query) return
-
-		const userMessage: Message = { role: Role.USER, content: query }
-		appendMessage(userMessage)
-
-		appendMessage({ role: Role.AI, content: "" })
-		void submitForm({ bodyParams: { userQuery: query } })
+		void fetchStream(suggestion)
 	}
 
 	return {
@@ -119,7 +158,9 @@ function useWorkflowIdData() {
 		setResponse,
 		handleSubmit,
 		handleSuggestion,
-		messages: messages.current,
+		messages,
+		streamedMessage,
+		isMessageLoading,
 	}
 }
 const WorkflowIdContext = createContext<

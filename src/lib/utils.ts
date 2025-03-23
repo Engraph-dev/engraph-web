@@ -87,7 +87,6 @@ export function getSuggestions(
 	workflowData: GetWorkflowResponse["workflowData"],
 	n: number = 5,
 ) {
-	console.log({ workflowData })
 	const symbols = workflowData.symbolNodes
 		.flat()
 		.map((node) => node?.properties?.symbolIdentifier)

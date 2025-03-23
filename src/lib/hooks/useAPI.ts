@@ -110,7 +110,7 @@ export function useAPIRequest<
 				setResponseState({
 					isLoading: false,
 					...fetchResponse,
-				})
+				} as UseAPIRequestRet<ResponseT, ParamsT, BodyT, QueryT>)
 			} catch (error) {
 				setResponseState({
 					isLoading: false,
