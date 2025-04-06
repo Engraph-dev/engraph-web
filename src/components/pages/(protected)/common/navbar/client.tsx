@@ -24,6 +24,7 @@ export function UserDetails() {
 		navigator.clipboard.writeText(sessionData?.orgId)
 		toast.info("Organization ID copied to clipboard")
 	}
+
 	return (
 		<div className="flex items-center gap-2">
 			{sessionData ? (
@@ -55,24 +56,33 @@ export function UserDetails() {
 
 export function Account(props: ButtonProps) {
 	const router = useRouter()
-	const { closeSession } = useSessionContext()
+	const { closeSession, sessionData } = useSessionContext()
 
 	function handleLogout() {
 		closeSession()
 		router.replace("/user/login")
 	}
+
 	return (
 		<Popover>
-			<PopoverTrigger asChild>
+			<PopoverTrigger
+				asChild
+				className="bg-transparent hover:bg-transparent"
+			>
 				<Button
 					variant="ghost"
 					size="icon"
-					className={cn("h-8 w-8 rounded-full", props.className)}
+					className={cn(
+						"h-8 w-8 rounded-full hover:bg-transparent",
+						props.className,
+					)}
 					{...props}
 				>
 					<Avatar className="h-8 w-8">
-						<AvatarImage src="https://github.com/vaxad.png" />
-						<AvatarFallback>U</AvatarFallback>
+						<AvatarFallback>
+							{sessionData?.sessionUser.userFirstName[0].toUpperCase() ||
+								"U"}
+						</AvatarFallback>
 					</Avatar>
 					<span className="sr-only">Profile</span>
 				</Button>
