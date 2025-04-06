@@ -51,7 +51,7 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 				return streamedMessage
 			}
 
-			return messages[idx].content || "### Thinking..."
+			return messages[idx].content || "Thinking..."
 		},
 		[messages, streamedMessage],
 	)
@@ -71,7 +71,7 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 						<div key={index} className="mb-4 text-background">
 							<div
 								className={cn(
-									"max-w-4/5 w-4/5 overflow-x-auto rounded-lg bg-foreground p-3",
+									"w-fit max-w-[90%] overflow-x-auto rounded-lg bg-foreground p-3",
 									message.role === Role.AI
 										? "justify-self-start"
 										: "justify-self-end",
@@ -121,8 +121,7 @@ export default function QueryForm({ workflowData }: WorkflowIdComponentProps) {
 								},
 								className:
 									"flex-grow px-3 py-2 text-sm border rounded-md w-full",
-								placeholder:
-									"How are commands in src/utils/commands.ts used?",
+								placeholder: "Ask anything",
 								disabled: isMessageLoading,
 							}}
 						/>
